@@ -81,13 +81,21 @@
     gsap.set('.fecha__ceremonia, .fecha__capilla, .fecha__direccion, .fecha__direccion-detalle, .fecha__hora', { opacity: 0, y: 15 });
     gsap.set('.fecha__recepcion, .fecha__recepcion-venue', { opacity: 0, y: 15 });
     gsap.set('.fecha .btn, .fecha__status', { opacity: 0, y: 15 });
+    gsap.set('.fecha .icon-separater', { opacity: 0, scale: 0.5, rotation: -20 });
 
     // --- Initial hidden states: Fiesta ---
     gsap.set('.fiesta__title', { opacity: 0, y: 30, filter: 'blur(4px)' });
+    gsap.set('.fiesta__wave', { opacity: 0, y: 30 });
     gsap.set('.fiesta__card', { opacity: 0, y: 50, scale: 0.95 });
+    gsap.set('.fiesta__card-icon', { opacity: 0, scale: 0.3, rotation: -15 });
+    gsap.set('.fiesta__card-heading', { opacity: 0, y: 15 });
+    gsap.set('.fiesta__card-text', { opacity: 0, y: 10 });
+    gsap.set('.fiesta__qr', { opacity: 0, scale: 0.8 });
     gsap.set('.fiesta__flor2', { opacity: 0, x: 40 });
     gsap.set('.fiesta__flor3', { opacity: 0, x: -40 });
     gsap.set('#btn-confirmar', { opacity: 0, y: 20, scale: 0.9 });
+    gsap.set('.fiesta .fecha__direccion-detalle', { opacity: 0, y: 15 });
+    gsap.set('.foto-footer', { opacity: 0, y: 30, scale: 0.95 });
 
     // --- Hero reveal timeline ---
     revealHero = function () {
@@ -241,6 +249,7 @@
 
             // Ceremonia section cascades
             .to('.fecha__ceremonia', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.5)
+            .to('.fecha .icon-separater', { opacity: 1, scale: 1, rotation: 0, duration: 0.8, stagger: 0.3, ease: 'back.out(1.7)' }, 0.55)
             .to('.fecha__capilla', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.6)
             .to('.fecha__direccion', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.7)
             .to('.fecha__direccion-detalle', { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, 0.8)
@@ -259,20 +268,56 @@
         el: '.fiesta',
         anim: function () {
           gsap.timeline()
+            // Waves drift in
+            .to('.fiesta__wave', { opacity: 1, y: 0, duration: 1.4, stagger: 0.2, ease: 'power2.out' }, 0)
+            // Title
             .to('.fiesta__title', {
               opacity: 1, y: 0, filter: 'blur(0px)',
               duration: 1.2, ease: 'power3.out'
-            }, 0)
+            }, 0.2)
+            // Cards slide up with stagger
             .to('.fiesta__card', {
               opacity: 1, y: 0, scale: 1,
               duration: 1.2, stagger: 0.3, ease: 'power3.out'
-            }, 0.3)
+            }, 0.5)
+            // Card icons pop in with bounce
+            .to('.fiesta__card-icon', {
+              opacity: 1, scale: 1, rotation: 0,
+              duration: 0.8, stagger: 0.2, ease: 'back.out(1.7)'
+            }, 0.8)
+            // Card headings
+            .to('.fiesta__card-heading', {
+              opacity: 1, y: 0,
+              duration: 0.6, stagger: 0.15, ease: 'power2.out'
+            }, 0.9)
+            // Card text
+            .to('.fiesta__card-text', {
+              opacity: 1, y: 0,
+              duration: 0.6, stagger: 0.15, ease: 'power2.out'
+            }, 1.1)
+            // QR code
+            .to('.fiesta__qr', {
+              opacity: 1, scale: 1,
+              duration: 0.8, ease: 'power2.out'
+            }, 1.3)
+            // Confirm button bounces in
             .to('#btn-confirmar', {
               opacity: 1, y: 0, scale: 1,
               duration: 1, ease: 'elastic.out(1, 0.8)'
-            }, 1.0)
+            }, 1.5)
+            // Confirm text
+            .to('.fiesta .fecha__direccion-detalle', {
+              opacity: 1, y: 0,
+              duration: 0.8, ease: 'power2.out'
+            }, 1.7)
+            // Decorative flowers
             .to('.fiesta__flor2', { opacity: 1, x: 0, duration: 1.5, ease: 'power2.out' }, 0.5)
-            .to('.fiesta__flor3', { opacity: 1, x: 0, duration: 1.5, ease: 'power2.out' }, 0.8);
+            .to('.fiesta__flor3', { opacity: 1, x: 0, duration: 1.5, ease: 'power2.out' }, 0.8)
+            // Footer photo
+            .to('.foto-footer', {
+              opacity: 1, y: 0, scale: 1,
+              duration: 1.2, ease: 'power3.out'
+            }, 1.9);
         }
       }
     ];
