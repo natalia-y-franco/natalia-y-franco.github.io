@@ -90,7 +90,7 @@ img {
   overflow-x: hidden;
   overflow-x: clip;
   overflow-y: visible;
-  background: #fbf9fc;
+  background: linear-gradient(to bottom, #fbf9fc 0%, #fbf9fc 70%, #F1F1F1 100%);
 }
 
 .hero__photo {
@@ -103,9 +103,11 @@ img {
 .hero__photo::after {
   content: '';
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  background: none;
+  left: 0; right: 0; bottom: -1px;
+  height: 35%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(241,241,241,0.4) 40%, rgba(241,241,241,0.85) 70%, #F1F1F1 100%);
   z-index: 1;
+  pointer-events: none;
 }
 
 .hero__photo img {
