@@ -561,22 +561,16 @@
       var openTL = gsap.timeline();
 
       openTL
-        // === BEAT 1: Seal softens and releases (0 - 1.2s) ===
+        // === BEAT 1: Seal softens with warm glow (0 - 1.2s) ===
         .to(tap, { opacity: 0, y: 8, duration: 0.5, ease: 'power2.inOut' }, 0)
 
-        // Seal glows warm — like heated wax softening
-        .to(sealImg, {
-          filter: 'drop-shadow(0 2px 12px rgba(191,168,128,0.6)) brightness(1.2)',
-          duration: 0.8, ease: 'power2.inOut'
-        }, 0)
+        // Wax layers soften
+        .to(sealShadow, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 0)
+        .to(sealImprint, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 0)
+        .to(sealWax, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 0)
 
-        // Wax layers soften and spread
-        .to(sealShadow, { opacity: 0.3, scale: 1.1, duration: 0.8, ease: 'power2.inOut' }, 0)
-        .to(sealWax, { scale: 1.1, opacity: 0.5, duration: 0.8, ease: 'power2.inOut' }, 0)
-        .to(sealImprint, { opacity: 0.3, duration: 0.6, ease: 'power2.inOut' }, 0)
-
-        // Gentle warm glow expands behind seal
-        .to(sealGlow, { scale: 2, opacity: 0.7, duration: 1.2, ease: 'power2.out' }, 0.2)
+        // Warm glow expands behind seal
+        .to(sealGlow, { scale: 2.5, opacity: 0.8, duration: 1.2, ease: 'power2.out' }, 0.2)
         .to(glow2, { scale: 0.8, opacity: 0.5, duration: 1.2, ease: 'power2.out' }, 0.3)
 
         // Spawn just a few delicate particles
@@ -585,19 +579,12 @@
           spawnFibers(12);
         }, 0.6)
 
-        // === BEAT 2: Seal dissolves gracefully (1.0 - 2.5s) ===
-        // Seal fades with a slow, dignified lift — no spin, no shrink
+        // === BEAT 2: Seal fades gracefully (1.0 - 2.8s) ===
+        // Gentle lift and fade — opacity only, no filter changes
         .to(seal, {
-          opacity: 0, y: -30, duration: 1.8,
+          opacity: 0, y: -25, duration: 2,
           ease: 'power2.inOut'
         }, 1.0)
-        .to(sealImg, {
-          filter: 'drop-shadow(0 4px 20px rgba(191,168,128,0.8)) brightness(1.35)',
-          duration: 1.2, ease: 'power2.inOut'
-        }, 1.0)
-        .to(sealShadow, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 1.0)
-        .to(sealWax, { opacity: 0, scale: 1.2, duration: 0.8, ease: 'power2.in' }, 1.0)
-        .to(sealImprint, { opacity: 0, duration: 0.5, ease: 'power2.in' }, 1.0)
         .to(sealRing, { scale: 1.5, opacity: 0, duration: 1.2, ease: 'power2.out' }, 1.0)
 
         // Glow expands gently as seal releases
