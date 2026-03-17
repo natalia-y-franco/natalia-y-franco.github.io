@@ -131,20 +131,45 @@
           var dogVideo = document.getElementById('dog-video-player');
           if (!dogVideo) return;
           dogVideo.play().catch(function () {});
-          // When video ends, fade out and show mascota bubble
+          // Fade out BEFORE the video ends so they finish together
+          var fadeDuration = 1.5;
+          var fadeStarted = false;
+          dogVideo.addEventListener('timeupdate', function () {
+            if (fadeStarted) return;
+            var remaining = dogVideo.duration - dogVideo.currentTime;
+            if (remaining <= fadeDuration && remaining > 0) {
+              fadeStarted = true;
+              gsap.to('.dog-intro', {
+                opacity: 0, duration: remaining,
+                ease: 'power2.in',
+                onComplete: function () {
+                  var el = document.getElementById('hero-dog');
+                  if (el) el.remove();
+                }
+              });
+              gsap.to('.mascota', {
+                y: 0, opacity: 1, scale: 1, visibility: 'visible', duration: 1,
+                ease: 'back.out(1.5)', delay: remaining * 0.5
+              });
+            }
+          });
+          // Fallback in case timeupdate doesn't fire precisely
           dogVideo.addEventListener('ended', function () {
-            gsap.to('.dog-intro', {
-              opacity: 0, duration: 1.2,
-              ease: 'power2.inOut',
-              onComplete: function () {
-                var el = document.getElementById('hero-dog');
-                if (el) el.remove();
-              }
-            });
-            gsap.to('.mascota', {
-              y: 0, opacity: 1, scale: 1, visibility: 'visible', duration: 1,
-              ease: 'back.out(1.5)', delay: 0.6
-            });
+            if (!fadeStarted) {
+              fadeStarted = true;
+              gsap.to('.dog-intro', {
+                opacity: 0, duration: 0.6,
+                ease: 'power2.inOut',
+                onComplete: function () {
+                  var el = document.getElementById('hero-dog');
+                  if (el) el.remove();
+                }
+              });
+              gsap.to('.mascota', {
+                y: 0, opacity: 1, scale: 1, visibility: 'visible', duration: 1,
+                ease: 'back.out(1.5)', delay: 0.3
+              });
+            }
           });
         }, 1.6)
         .to('.dog-intro', {
