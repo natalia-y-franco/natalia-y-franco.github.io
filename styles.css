@@ -209,13 +209,14 @@ img {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: clamp(40px, 12vh, 100px);
+  top: calc(clamp(80px, 20vh, 140px) - 98px);
   width: 90px;
   height: 90px;
   border-radius: 50%;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
+  z-index: 4;
 }
 
 .dog-intro__video {
@@ -229,6 +230,7 @@ img {
   .dog-intro {
     width: 100px;
     height: 100px;
+    top: calc(clamp(80px, 20vh, 140px) - 108px);
   }
 }
 
