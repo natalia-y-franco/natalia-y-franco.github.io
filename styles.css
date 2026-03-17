@@ -170,6 +170,13 @@ img {
   padding: 0 8px;
 }
 
+.hero__letter {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+
 .hero__line-bottom {
   display: block;
   width: 80px;

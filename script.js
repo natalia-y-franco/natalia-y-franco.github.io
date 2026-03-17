@@ -32,12 +32,29 @@
   function initPageAnimations() {
     if (typeof gsap === 'undefined') return;
 
+    // --- Split hero names into individual letter spans for handwriting effect ---
+    var namesEl = document.getElementById('hero-names');
+    if (namesEl) {
+      var lines = ['Natalia', '&', 'Franco'];
+      var html = '';
+      for (var l = 0; l < lines.length; l++) {
+        if (l > 0) html += '<br>';
+        var word = lines[l];
+        for (var c = 0; c < word.length; c++) {
+          html += '<span class="hero__letter" style="display:inline-block;opacity:0;">' + word[c] + '</span>';
+        }
+      }
+      namesEl.innerHTML = html;
+    }
+    var heroLetters = document.querySelectorAll('.hero__letter');
+
     // --- Initial hidden states: Hero ---
     gsap.set('.hero__photo', { opacity: 0, scale: 1.08 });
     gsap.set('.hero__photo img', { scale: 1.12 });
     gsap.set('.hero__date-line', { scaleX: 0 });
     gsap.set('.hero__date-text', { opacity: 0, y: 15, filter: 'blur(6px)' });
-    gsap.set('.hero__names', { opacity: 0, y: 50, filter: 'blur(10px)', scale: 0.95 });
+    gsap.set('.hero__names', { opacity: 1, y: 0, scale: 1 });
+    gsap.set(heroLetters, { opacity: 0, y: 18, filter: 'blur(4px)', scale: 0.92 });
     gsap.set('.hero__line-bottom', { scaleX: 0 });
     gsap.set('.hero__espiga--left', { opacity: 0, x: -60, rotation: -12, scale: 0.85 });
     gsap.set('.hero__espiga--right', { opacity: 0, x: 60, rotation: 12, scale: 0.85 });
@@ -85,14 +102,18 @@
           duration: 1.2, ease: 'power3.out'
         }, 0.8)
 
-        // Names emerge — the grand reveal
-        .to('.hero__names', {
+        // Names — elegant handwriting reveal, letter by letter
+        .to(heroLetters, {
           opacity: 1, y: 0, filter: 'blur(0px)', scale: 1,
-          duration: 1.8, ease: 'power4.out'
+          duration: 0.9, ease: 'power3.out',
+          stagger: {
+            each: 0.08,
+            from: 'start'
+          }
         }, 1.0)
 
-        // Bottom line draws
-        .to('.hero__line-bottom', { scaleX: 1, duration: 1, ease: 'expo.out' }, 1.6)
+        // Bottom line draws after last letter settles
+        .to('.hero__line-bottom', { scaleX: 1, duration: 1, ease: 'expo.out' }, 2.4)
 
         // Espigas float in organically
         .to('.hero__espiga--left', {
