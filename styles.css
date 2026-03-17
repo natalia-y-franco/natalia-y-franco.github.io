@@ -526,7 +526,7 @@ img {
 .fecha__ceremonia {
   font-family: 'Abhaya Libre', serif;
   font-weight: 400;
-  font-size: 24px;
+  font-size: 32px;
   line-height: 32px;
   letter-spacing: 0;
   text-align: center;
@@ -581,7 +581,7 @@ img {
 .fecha__recepcion {
   font-family: 'Abhaya Libre', serif;
   font-weight: 400;
-  font-size: 24px;
+  font-size: 32px;
   line-height: 32px;
   letter-spacing: 0;
   text-align: center;
@@ -751,7 +751,7 @@ img {
   overflow-x: hidden;
   overflow-x: clip;
   overflow-y: visible;
-  background: url('assets/background-bottom.svg') top center / 100% auto no-repeat;
+  background: url('assets/background-bottom.svg') top center / 100% 100% no-repeat;
 }
 
 .fiesta__title {
@@ -1585,7 +1585,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
 }
 
 .intro__seal-img {
-  width: 100%;
+  width: 160px !important;
   height: auto;
   display: block;
   position: relative;
@@ -2275,4 +2275,7 @@ body.modal-open {
 
 .music-toggle--muted .music-toggle__bar {
   transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
+}
+.dresscode {
+  width: 90px;
 }
