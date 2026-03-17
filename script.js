@@ -476,30 +476,30 @@
       // Tap prompt
       .to(tap, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 3.8);
 
-    // Breathing loops — very subtle since it's "pressed" (no floating)
+    // Breathing loops — very subtle, slow, elegant
     var sealPulse = gsap.to(sealGlow, {
-      scale: 1.4, opacity: 0.25, duration: 3.2,
+      scale: 1.15, opacity: 0.35, duration: 4.5,
       ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.2
     });
 
     var ringPulse = gsap.to(sealRing, {
-      scale: 1.2, opacity: 0.12, duration: 3.2,
+      scale: 1.08, opacity: 0.15, duration: 4.5,
       ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.4
     });
 
-    // No floating — seal stays pressed. Just a very subtle warmth pulse
+    // No floating — seal stays pressed
     var sealFloat = gsap.to(sealImprint, {
-      opacity: 0.5, duration: 3,
+      opacity: 0.55, duration: 4,
       ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.2
     });
 
     var tapPulse = gsap.to(tap, {
-      opacity: 0.5, duration: 3, ease: 'sine.inOut',
+      opacity: 0.4, duration: 3.5, ease: 'sine.inOut',
       repeat: -1, yoyo: true, delay: 5.0
     });
 
     var glow2Pulse = gsap.to(glow2, {
-      scale: 0.65, opacity: 0.2, duration: 3.5,
+      scale: 0.58, opacity: 0.18, duration: 4.5,
       ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.0
     });
 
@@ -508,16 +508,16 @@
     // ============================
     var phase = 0;
 
-    // Each fragment gets unique physics for the tear
+    // Each fragment drifts apart gracefully — slow, gentle separation
     var fragPhysics = [
-      // Left fragments: fly left/up
-      { x: '-120%', y: '-30%', rotation: -25, delay: 0.1 },
-      { x: '-100%', y: '15%',  rotation: -18, delay: 0.2 },
-      { x: '-90%',  y: '50%',  rotation: -30, delay: 0.15 },
-      // Right fragments: fly right/down
-      { x: '120%',  y: '-25%', rotation: 22,  delay: 0.12 },
-      { x: '100%',  y: '20%',  rotation: 28,  delay: 0.18 },
-      { x: '110%',  y: '45%',  rotation: 20,  delay: 0.22 }
+      // Left fragments: drift left with gentle rotation
+      { x: '-65%', y: '-12%', rotation: -8,  delay: 0.3 },
+      { x: '-55%', y: '8%',   rotation: -5,  delay: 0.5 },
+      { x: '-50%', y: '22%',  rotation: -10, delay: 0.4 },
+      // Right fragments: drift right
+      { x: '65%',  y: '-10%', rotation: 6,   delay: 0.35 },
+      { x: '55%',  y: '10%',  rotation: 8,   delay: 0.45 },
+      { x: '60%',  y: '20%',  rotation: 5,   delay: 0.55 }
     ];
 
     intro.addEventListener('click', function () {
@@ -540,43 +540,49 @@
       var openTL = gsap.timeline();
 
       openTL
-        // === BEAT 1: Seal impact (0 - 0.5s) ===
-        .to(tap, { opacity: 0, y: 12, duration: 0.2, ease: 'power3.in' }, 0)
+        // === BEAT 1: Seal softens and releases (0 - 1.2s) ===
+        .to(tap, { opacity: 0, y: 8, duration: 0.5, ease: 'power2.inOut' }, 0)
 
-        // Seal "unsticks" from fabric — wax layers vanish
-        .to(sealShadow, { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0)
-        .to(sealWax, { opacity: 0, scale: 1.3, duration: 0.3, ease: 'power2.in' }, 0)
-        .to(sealImprint, { opacity: 0, duration: 0.15, ease: 'power2.in' }, 0)
-
-        // Seal pulses inward then bursts
-        .to(seal, { scale: 1.25, duration: 0.12, ease: 'power4.in' }, 0)
-        .to(seal, { scale: 1.1, duration: 0.08, ease: 'power2.out' }, 0.12)
-        .add(function () {
-          spawnBurst(70);
-          spawnFibers(40);
-        }, 0.15)
-
-        // Seal blazes white-hot
+        // Seal glows warm — like heated wax softening
         .to(sealImg, {
-          filter: 'drop-shadow(0 0 50px rgba(255,220,150,1)) brightness(2.5)',
-          duration: 0.25, ease: 'power2.in'
-        }, 0.1)
-        .to(sealGlow, { scale: 4, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.15)
-        .to(sealRing, { scale: 3, opacity: 0, duration: 0.5, ease: 'power2.out' }, 0.15)
+          filter: 'drop-shadow(0 2px 12px rgba(191,168,128,0.6)) brightness(1.2)',
+          duration: 0.8, ease: 'power2.inOut'
+        }, 0)
 
-        // Seal disintegrates upward
+        // Wax layers soften and spread
+        .to(sealShadow, { opacity: 0.3, scale: 1.1, duration: 0.8, ease: 'power2.inOut' }, 0)
+        .to(sealWax, { scale: 1.1, opacity: 0.5, duration: 0.8, ease: 'power2.inOut' }, 0)
+        .to(sealImprint, { opacity: 0.3, duration: 0.6, ease: 'power2.inOut' }, 0)
+
+        // Gentle warm glow expands behind seal
+        .to(sealGlow, { scale: 2, opacity: 0.7, duration: 1.2, ease: 'power2.out' }, 0.2)
+        .to(glow2, { scale: 0.8, opacity: 0.5, duration: 1.2, ease: 'power2.out' }, 0.3)
+
+        // Spawn just a few delicate particles
+        .add(function () {
+          spawnBurst(20);
+          spawnFibers(12);
+        }, 0.6)
+
+        // === BEAT 2: Seal dissolves gracefully (1.0 - 2.5s) ===
+        // Seal fades with a slow, dignified lift — no spin, no shrink
         .to(seal, {
-          scale: 0.2, opacity: 0, y: -100, rotation: 20,
-          duration: 0.8, ease: 'power3.in'
-        }, 0.25)
+          opacity: 0, y: -30, duration: 1.8,
+          ease: 'power2.inOut'
+        }, 1.0)
+        .to(sealImg, {
+          filter: 'drop-shadow(0 4px 20px rgba(191,168,128,0.8)) brightness(1.35)',
+          duration: 1.2, ease: 'power2.inOut'
+        }, 1.0)
+        .to(sealShadow, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 1.0)
+        .to(sealWax, { opacity: 0, scale: 1.2, duration: 0.8, ease: 'power2.in' }, 1.0)
+        .to(sealImprint, { opacity: 0, duration: 0.5, ease: 'power2.in' }, 1.0)
+        .to(sealRing, { scale: 1.5, opacity: 0, duration: 1.2, ease: 'power2.out' }, 1.0)
 
-        // === BEAT 2: Light erupts from tear line (0.4 - 1.2s) ===
-        .to(glow, { scale: 0.7, opacity: 0.9, duration: 0.7, ease: 'power2.out' }, 0.4)
-        .to(glow2, { scale: 1, opacity: 0.8, duration: 0.7, ease: 'power2.out' }, 0.5)
-        .to(sealGlow, { scale: 6, opacity: 0, duration: 1.2, ease: 'power1.out' }, 0.6)
+        // Glow expands gently as seal releases
+        .to(sealGlow, { scale: 3.5, opacity: 0, duration: 2, ease: 'power1.out' }, 1.2)
 
-        // === BEAT 3: Fragments tear away (0.6 - 2.5s) ===
-        // Each fragment flies out with unique trajectory and timing
+        // === BEAT 3: Fragments drift apart slowly (1.4 - 3.5s) ===
         .add(function () {
           fragments.forEach(function (frag, idx) {
             var phys = fragPhysics[idx];
@@ -585,30 +591,30 @@
               y: phys.y,
               rotation: phys.rotation,
               opacity: 0,
-              duration: 1.6 + Math.random() * 0.4,
+              duration: 2.5 + Math.random() * 0.5,
               delay: phys.delay,
-              ease: 'power3.in'
+              ease: 'power2.inOut'
             });
           });
-        }, 0.6)
+        }, 1.4)
 
-        // Second wave of fibers as fragments separate
-        .add(function () { spawnFibers(25); }, 1.0)
+        // A few gentle fibers drift as fabric parts
+        .add(function () { spawnFibers(8); }, 2.0)
 
-        // === BEAT 4: Golden light expands (1.2 - 2.8s) ===
-        .to(glow, { scale: 1.8, opacity: 1, duration: 1.2, ease: 'power1.out' }, 1.2)
-        .to(glow2, { scale: 2.5, opacity: 0.6, duration: 1.2, ease: 'power1.out' }, 1.3)
+        // === BEAT 4: Warm golden light fills the space (2.0 - 4.0s) ===
+        .to(glow, { scale: 1.2, opacity: 0.7, duration: 1.5, ease: 'power1.out' }, 2.0)
+        .to(glow2, { scale: 1.8, opacity: 0.5, duration: 1.5, ease: 'power1.out' }, 2.2)
 
-        // Particles swell then dissolve
-        .to(particleAlpha, { value: 1.8, duration: 0.8, ease: 'power1.in' }, 1.2)
-        .to(particleAlpha, { value: 0, duration: 1.2, ease: 'power2.in' }, 2.2)
+        // Particles gently fade
+        .to(particleAlpha, { value: 0.6, duration: 1, ease: 'power1.inOut' }, 2.0)
+        .to(particleAlpha, { value: 0, duration: 1.5, ease: 'power2.in' }, 3.0)
 
-        // Glows dissolve
-        .to(glow, { scale: 3.5, opacity: 0, duration: 1.2, ease: 'power1.in' }, 2.5)
-        .to(glow2, { scale: 3.5, opacity: 0, duration: 1, ease: 'power1.in' }, 2.6)
+        // Glows dissolve slowly
+        .to(glow, { scale: 2.5, opacity: 0, duration: 1.5, ease: 'power1.inOut' }, 3.5)
+        .to(glow2, { scale: 2.5, opacity: 0, duration: 1.2, ease: 'power1.inOut' }, 3.6)
 
-        // === BEAT 5: Warm flash to page (2.8 - 4s) ===
-        .to(flash, { opacity: 1, duration: 1.2, ease: 'power2.inOut' }, 2.8)
+        // === BEAT 5: Soft warm transition to page (3.8 - 5.2s) ===
+        .to(flash, { opacity: 1, duration: 1.4, ease: 'power1.inOut' }, 3.8)
 
         // Cleanup
         .add(function () {
@@ -617,7 +623,7 @@
           intro.remove();
           document.documentElement.classList.remove('intro-active');
           if (revealHero) revealHero();
-        }, 4.0);
+        }, 5.2);
     });
   }
 
