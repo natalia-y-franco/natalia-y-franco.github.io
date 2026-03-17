@@ -388,10 +388,19 @@
     // ============================
     var envelope = document.getElementById('intro-envelope');
 
+    // New seal layers
+    var sealShadow = seal && seal.querySelector('.intro__seal-shadow');
+    var sealWax = seal && seal.querySelector('.intro__seal-wax');
+    var sealImprint = seal && seal.querySelector('.intro__seal-imprint');
+
     // Initial states
     gsap.set(envelope, { opacity: 0, scale: 1.03 });
-    gsap.set(seal, { opacity: 0, scale: 0.6, y: 20 });
-    gsap.set(sealImg, { filter: 'drop-shadow(0 8px 25px rgba(0,0,0,0.7)) brightness(0.7)' });
+    // Seal starts above, larger (approaching from distance), with heavy floating shadow
+    gsap.set(seal, { opacity: 0, scale: 1.5, y: -80 });
+    gsap.set(sealImg, { filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.8)) brightness(0.6)' });
+    gsap.set(sealShadow, { opacity: 0, scale: 0.5 });
+    gsap.set(sealWax, { opacity: 0, scale: 0.6 });
+    gsap.set(sealImprint, { opacity: 0 });
     gsap.set(sealGlow, { opacity: 0, scale: 0.4 });
     gsap.set(sealRing, { opacity: 0, scale: 0.7 });
     gsap.set(tap, { opacity: 0, y: 15 });
@@ -413,40 +422,75 @@
       // Particles grow
       .to(particleAlpha, { value: 1, duration: 2, ease: 'power1.inOut' }, 1.5)
 
-      // Seal descends with elegant spring
+      // === SEAL STAMPS DOWN onto envelope ===
+      // Phase 1: Seal drops from above and slams down
       .to(seal, {
-        opacity: 1, scale: 1, y: 0, duration: 1.6,
-        ease: 'elastic.out(1, 0.5)'
+        opacity: 1, scale: 1.08, y: 0, duration: 0.5,
+        ease: 'power3.in'
       }, 2.0)
+      // Phase 2: Impact — slight overshoot squish, then settle into pressed position
+      .to(seal, {
+        scale: 0.96, duration: 0.1,
+        ease: 'power4.out'
+      }, 2.5)
+      .to(seal, {
+        scale: 1, duration: 0.4,
+        ease: 'elastic.out(1.2, 0.4)'
+      }, 2.6)
 
-      // Seal illumination sequence
+      // Shadow transitions from floating (big blur) to pressed (tight contact shadow)
       .to(sealImg, {
-        filter: 'drop-shadow(0 4px 35px rgba(191,168,128,0.6)) brightness(1.15)',
+        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(0.85)',
+        duration: 0.5, ease: 'power3.in'
+      }, 2.0)
+      // Impact flash — brief brightness spike
+      .to(sealImg, {
+        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(1.3)',
+        duration: 0.08, ease: 'power2.in'
+      }, 2.5)
+      .to(sealImg, {
+        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(1.05)',
+        duration: 0.8, ease: 'power2.out'
+      }, 2.58)
+
+      // Pressed shadow ring appears on impact
+      .to(sealShadow, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }, 2.5)
+
+      // Wax spread seeps into fabric after stamp
+      .to(sealWax, { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.55)
+
+      // Burlap imprint texture fades in on the wax surface
+      .to(sealImprint, { opacity: 0.7, duration: 1.5, ease: 'power1.inOut' }, 2.7)
+
+      // Seal illumination sequence (warm glow now that it's settled)
+      .to(sealImg, {
+        filter: 'drop-shadow(0 2px 6px rgba(191,168,128,0.4)) drop-shadow(0 1px 1px rgba(0,0,0,0.3)) brightness(1.1)',
         duration: 1.5, ease: 'power2.inOut'
-      }, 2.3)
-      .to(sealGlow, { opacity: 0.9, scale: 1, duration: 1.4, ease: 'power2.out' }, 2.2)
-      .to(sealRing, { opacity: 0.8, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.4)
+      }, 3.0)
+      .to(sealGlow, { opacity: 0.9, scale: 1, duration: 1.4, ease: 'power2.out' }, 2.8)
+      .to(sealRing, { opacity: 0.8, scale: 1, duration: 1.2, ease: 'power2.out' }, 3.0)
 
       // Inner glow
-      .to(glow2, { scale: 0.5, opacity: 0.35, duration: 1.8, ease: 'power1.out' }, 2.8)
+      .to(glow2, { scale: 0.5, opacity: 0.35, duration: 1.8, ease: 'power1.out' }, 3.2)
 
       // Tap prompt
-      .to(tap, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 3.5);
+      .to(tap, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 3.8);
 
-    // Breathing loops
+    // Breathing loops — very subtle since it's "pressed" (no floating)
     var sealPulse = gsap.to(sealGlow, {
       scale: 1.4, opacity: 0.25, duration: 3.2,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.8
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.2
     });
 
     var ringPulse = gsap.to(sealRing, {
       scale: 1.2, opacity: 0.12, duration: 3.2,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.0
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.4
     });
 
-    var sealFloat = gsap.to(seal, {
-      y: -5, duration: 2.8,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.8
+    // No floating — seal stays pressed. Just a very subtle warmth pulse
+    var sealFloat = gsap.to(sealImprint, {
+      opacity: 0.5, duration: 3,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.2
     });
 
     var tapPulse = gsap.to(tap, {
@@ -490,6 +534,7 @@
       gsap.killTweensOf(seal);
       gsap.killTweensOf(sealGlow);
       gsap.killTweensOf(sealRing);
+      gsap.killTweensOf(sealImprint);
       gsap.killTweensOf(glow2);
 
       var openTL = gsap.timeline();
@@ -497,6 +542,11 @@
       openTL
         // === BEAT 1: Seal impact (0 - 0.5s) ===
         .to(tap, { opacity: 0, y: 12, duration: 0.2, ease: 'power3.in' }, 0)
+
+        // Seal "unsticks" from fabric — wax layers vanish
+        .to(sealShadow, { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0)
+        .to(sealWax, { opacity: 0, scale: 1.3, duration: 0.3, ease: 'power2.in' }, 0)
+        .to(sealImprint, { opacity: 0, duration: 0.15, ease: 'power2.in' }, 0)
 
         // Seal pulses inward then bursts
         .to(seal, { scale: 1.25, duration: 0.12, ease: 'power4.in' }, 0)
