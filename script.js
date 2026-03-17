@@ -179,50 +179,43 @@
         .to('.dog-intro', {
           opacity: 1, duration: 1.2,
           ease: 'power2.out'
-        }, 1.8);
+        }, 1.8)
+
+        // Countdown entrance — plays as hero settles
+        .to('.countdown__wave', { opacity: 1, y: 0, duration: 1.4, stagger: 0.2, ease: 'power2.out' }, 2.0)
+        .to('.countdown__vector', { opacity: 1, scale: 1, rotation: 0, duration: 1.6, ease: 'power3.out' }, 2.2)
+        .to('.countdown__bubble', {
+          opacity: 1, y: 0, scale: 1,
+          duration: 1.6, ease: 'power4.out'
+        }, 2.3)
+        .to('.countdown__title', {
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out'
+        }, 2.8)
+        .to('.countdown__number', {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.8, stagger: 0.15, ease: 'back.out(2)'
+        }, 3.0)
+        .to('.countdown__separator', {
+          opacity: 1, scaleY: 1,
+          duration: 0.6, stagger: 0.1, ease: 'power2.out'
+        }, 3.2)
+        .to('.countdown__label', {
+          opacity: 1, y: 0,
+          duration: 0.6, stagger: 0.1, ease: 'power2.out'
+        }, 3.3);
     };
 
     // If no intro, reveal hero immediately
     if (!document.getElementById('intro')) {
       revealHero();
+      setupScrollReveals();
     }
+  }
 
-    // --- Scroll-triggered section reveals ---
+  // --- Scroll-triggered section reveals (separate so we can defer until intro is dismissed) ---
+  function setupScrollReveals() {
+    if (typeof gsap === 'undefined') return;
     var sectionDefs = [
-      {
-        el: '.countdown',
-        anim: function () {
-          gsap.timeline()
-            // Waves drift in softly
-            .to('.countdown__wave', { opacity: 1, y: 0, duration: 1.4, stagger: 0.2, ease: 'power2.out' }, 0)
-            // Decorative vector floats in with rotation
-            .to('.countdown__vector', { opacity: 1, scale: 1, rotation: 0, duration: 1.6, ease: 'power3.out' }, 0.2)
-            // Bubble rises and scales elegantly
-            .to('.countdown__bubble', {
-              opacity: 1, y: 0, scale: 1,
-              duration: 1.6, ease: 'power4.out'
-            }, 0.3)
-            // "Faltan" title fades in
-            .to('.countdown__title', {
-              opacity: 1, y: 0, duration: 1, ease: 'power3.out'
-            }, 0.8)
-            // Numbers count up with stagger
-            .to('.countdown__number', {
-              opacity: 1, y: 0, scale: 1,
-              duration: 0.8, stagger: 0.15, ease: 'back.out(2)'
-            }, 1.0)
-            // Separators draw in
-            .to('.countdown__separator', {
-              opacity: 1, scaleY: 1,
-              duration: 0.6, stagger: 0.1, ease: 'power2.out'
-            }, 1.2)
-            // Labels fade in
-            .to('.countdown__label', {
-              opacity: 1, y: 0,
-              duration: 0.6, stagger: 0.1, ease: 'power2.out'
-            }, 1.3);
-        }
-      },
       {
         el: '.message',
         anim: function () {
@@ -709,6 +702,7 @@
           intro.remove();
           document.documentElement.classList.remove('intro-active');
           if (revealHero) revealHero();
+          setupScrollReveals();
         }, 5.2);
     });
   }
@@ -833,6 +827,7 @@
     if (intro) intro.remove();
     document.documentElement.classList.remove('intro-active');
     if (revealHero) revealHero();
+    setupScrollReveals();
   }
 
   // Si hay token, buscar info del invitado primero
