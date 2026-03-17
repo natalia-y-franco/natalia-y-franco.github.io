@@ -25,12 +25,13 @@
     <div class="intro__glow2"></div>
 
     <div class="intro__envelope" id="intro-envelope" style="opacity:0">
-      <div class="intro__flap intro__flap--left" id="intro-flap-left">
-        <img src="assets/fondo-textura-arpillera_izquierda.svg" alt="">
-      </div>
-      <div class="intro__flap intro__flap--right" id="intro-flap-right">
-        <img src="assets/fondo-textura-arpillera_derecha.svg" alt="">
-      </div>
+      <!-- 6 fragments for tear effect via clip-path -->
+      <div class="intro__fragment" data-frag="0"><img src="assets/fondo-textura-arpillera_izquierda.svg" alt=""></div>
+      <div class="intro__fragment" data-frag="1"><img src="assets/fondo-textura-arpillera_izquierda.svg" alt=""></div>
+      <div class="intro__fragment" data-frag="2"><img src="assets/fondo-textura-arpillera_izquierda.svg" alt=""></div>
+      <div class="intro__fragment" data-frag="3"><img src="assets/fondo-textura-arpillera_derecha.svg" alt=""></div>
+      <div class="intro__fragment" data-frag="4"><img src="assets/fondo-textura-arpillera_derecha.svg" alt=""></div>
+      <div class="intro__fragment" data-frag="5"><img src="assets/fondo-textura-arpillera_derecha.svg" alt=""></div>
     </div>
 
     <div class="intro__seal" id="intro-seal" style="opacity:0">
@@ -38,8 +39,6 @@
       <div class="intro__seal-glow"></div>
       <img src="assets/sello%20vela.svg" alt="" class="intro__seal-img">
     </div>
-
-    <div class="intro__sparks" id="intro-sparks"></div>
 
     <p class="intro__tap" id="intro-tap" style="opacity:0">Toca el sello para abrir</p>
     <div class="intro__flash"></div>

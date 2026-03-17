@@ -33,55 +33,76 @@
     if (typeof gsap === 'undefined') return;
 
     // --- Initial hidden states: Hero ---
-    gsap.set('.hero__photo', { opacity: 0, scale: 1.1 });
-    gsap.set('.hero__photo img', { scale: 1.15 });
+    gsap.set('.hero__photo', { opacity: 0, scale: 1.08 });
+    gsap.set('.hero__photo img', { scale: 1.12 });
     gsap.set('.hero__date-line', { scaleX: 0 });
-    gsap.set('.hero__date-text', { opacity: 0, y: 10, filter: 'blur(4px)' });
-    gsap.set('.hero__names', { opacity: 0, y: 40, filter: 'blur(6px)' });
+    gsap.set('.hero__date-text', { opacity: 0, y: 15, filter: 'blur(6px)' });
+    gsap.set('.hero__names', { opacity: 0, y: 50, filter: 'blur(10px)', scale: 0.95 });
     gsap.set('.hero__line-bottom', { scaleX: 0 });
-    gsap.set('.hero__espiga--left', { opacity: 0, x: -50, rotation: -8 });
-    gsap.set('.hero__espiga--right', { opacity: 0, x: 50, rotation: 8 });
+    gsap.set('.hero__espiga--left', { opacity: 0, x: -60, rotation: -12, scale: 0.85 });
+    gsap.set('.hero__espiga--right', { opacity: 0, x: 60, rotation: 12, scale: 0.85 });
 
     // --- Initial hidden states: Countdown ---
-    gsap.set('.countdown__bubble', { opacity: 0, y: 30, scale: 0.9 });
-    gsap.set('.countdown__vector', { opacity: 0 });
+    gsap.set('.countdown__bubble', { opacity: 0, y: 40, scale: 0.85 });
+    gsap.set('.countdown__vector', { opacity: 0, scale: 0.8 });
+    gsap.set('.countdown__wave', { opacity: 0, y: 20 });
 
     // --- Initial hidden states: Message ---
-    gsap.set('.message__text', { opacity: 0, y: 25, filter: 'blur(4px)' });
-    gsap.set('.message__leaf', { opacity: 0, scale: 0.8, rotation: -10 });
+    gsap.set('.message__text', { opacity: 0, y: 30, filter: 'blur(6px)' });
+    gsap.set('.message__bajada', { opacity: 0, scaleX: 0.3 });
 
     // --- Initial hidden states: Fecha ---
-    gsap.set('.fecha__title', { opacity: 0, y: 25 });
-    gsap.set('.fecha__day, .fecha__venue, .fecha__city', { opacity: 0, y: 20 });
+    gsap.set('.fecha__title', { opacity: 0, y: 30, filter: 'blur(4px)' });
+    gsap.set('.fecha__manzanilla', { opacity: 0, x: 30 });
+    gsap.set('.fecha__flor', { opacity: 0, y: 40 });
+    gsap.set('.fecha__day', { opacity: 0, y: 20 });
+    gsap.set('.fecha__ceremonia, .fecha__capilla, .fecha__direccion, .fecha__direccion-detalle, .fecha__hora', { opacity: 0, y: 15 });
+    gsap.set('.fecha__recepcion, .fecha__recepcion-venue', { opacity: 0, y: 15 });
     gsap.set('.fecha .btn, .fecha__status', { opacity: 0, y: 15 });
 
     // --- Initial hidden states: Fiesta ---
-    gsap.set('.fiesta__title', { opacity: 0, y: 25 });
-    gsap.set('.fiesta__card', { opacity: 0, y: 40 });
-    gsap.set('.fiesta__deco', { opacity: 0 });
+    gsap.set('.fiesta__title', { opacity: 0, y: 30, filter: 'blur(4px)' });
+    gsap.set('.fiesta__card', { opacity: 0, y: 50, scale: 0.95 });
+    gsap.set('.fiesta__flor2', { opacity: 0, x: 40 });
+    gsap.set('.fiesta__flor3', { opacity: 0, x: -40 });
+    gsap.set('#btn-confirmar', { opacity: 0, y: 20, scale: 0.9 });
 
-    // --- Hero reveal timeline (spectacular after envelope) ---
+    // --- Hero reveal timeline ---
     revealHero = function () {
-      gsap.timeline()
-        // Photo fades in with zoom-out (Ken Burns)
-        .to('.hero__photo', { opacity: 1, scale: 1, duration: 2, ease: 'power2.out' }, 0)
-        .to('.hero__photo img', { scale: 1, duration: 4, ease: 'power1.out' }, 0)
+      var tl = gsap.timeline();
 
-        // Date lines extend
-        .to('.hero__date-line', { scaleX: 1, duration: 1, ease: 'power2.inOut' }, 0.5)
+      tl
+        // Photo breathes in with cinematic zoom
+        .to('.hero__photo', { opacity: 1, scale: 1, duration: 2.5, ease: 'power3.out' }, 0)
+        .to('.hero__photo img', { scale: 1, duration: 5, ease: 'power1.out' }, 0)
 
-        // Date text clears from blur
-        .to('.hero__date-text', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out' }, 0.7)
+        // Date lines extend from center
+        .to('.hero__date-line', { scaleX: 1, duration: 1.2, ease: 'expo.out' }, 0.6)
 
-        // Names rise up from blur
-        .to('.hero__names', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.4, ease: 'power3.out' }, 0.8)
+        // Date text materializes from blur
+        .to('.hero__date-text', {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: 1.2, ease: 'power3.out'
+        }, 0.8)
 
-        // Bottom line
-        .to('.hero__line-bottom', { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, 1.4)
+        // Names emerge — the grand reveal
+        .to('.hero__names', {
+          opacity: 1, y: 0, filter: 'blur(0px)', scale: 1,
+          duration: 1.8, ease: 'power4.out'
+        }, 1.0)
 
-        // Espigas sweep in with rotation
-        .to('.hero__espiga--left', { opacity: 1, x: 0, rotation: 0, duration: 1.5, ease: 'power2.out' }, 0.6)
-        .to('.hero__espiga--right', { opacity: 1, x: 0, rotation: 0, duration: 1.5, ease: 'power2.out' }, 0.8);
+        // Bottom line draws
+        .to('.hero__line-bottom', { scaleX: 1, duration: 1, ease: 'expo.out' }, 1.6)
+
+        // Espigas float in organically
+        .to('.hero__espiga--left', {
+          opacity: 1, x: 0, rotation: 0, scale: 1,
+          duration: 2, ease: 'power2.out'
+        }, 0.8)
+        .to('.hero__espiga--right', {
+          opacity: 1, x: 0, rotation: 0, scale: 1,
+          duration: 2, ease: 'power2.out'
+        }, 1.0);
     };
 
     // If no intro, reveal hero immediately
@@ -95,37 +116,71 @@
         el: '.countdown',
         anim: function () {
           gsap.timeline()
-            .to('.countdown__vector', { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
-            .to('.countdown__bubble', { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'back.out(1.6)' }, 0.15);
+            .to('.countdown__wave', { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power2.out' }, 0)
+            .to('.countdown__vector', { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' }, 0.1)
+            .to('.countdown__bubble', {
+              opacity: 1, y: 0, scale: 1,
+              duration: 1.4, ease: 'elastic.out(1, 0.7)'
+            }, 0.2);
         }
       },
       {
         el: '.message',
         anim: function () {
           gsap.timeline()
-            .to('.message__leaf', { opacity: 0.5, scale: 1, rotation: 0, duration: 1.2, ease: 'power2.out' }, 0)
-            .to('.message__text', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, 0.2);
+            .to('.message__text', {
+              opacity: 1, y: 0, filter: 'blur(0px)',
+              duration: 1.4, ease: 'power3.out'
+            }, 0)
+            .to('.message__bajada', {
+              opacity: 0.8, scaleX: 1,
+              duration: 1.2, ease: 'power2.out'
+            }, 0.4);
         }
       },
       {
         el: '.fecha',
         anim: function () {
-          gsap.timeline()
-            .to('.fecha__title', { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, 0)
-            .to('.fecha__day', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.15)
-            .to('.fecha__venue', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.25)
-            .to('.fecha__city', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.35)
-            .to('.fecha .btn, .fecha__status', { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power2.out' }, 0.45);
+          var tl = gsap.timeline();
+          tl
+            .to('.fecha__title', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out' }, 0)
+            .to('.fecha__manzanilla', { opacity: 1, x: 0, duration: 1.5, ease: 'power2.out' }, 0.2)
+            .to('.fecha__day', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 0.3)
+
+            // Ceremonia section cascades
+            .to('.fecha__ceremonia', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.5)
+            .to('.fecha__capilla', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.6)
+            .to('.fecha__direccion', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.7)
+            .to('.fecha__direccion-detalle', { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, 0.8)
+            .to('.fecha__hora', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.9)
+
+            // Recepción cascades
+            .to('.fecha__recepcion', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 1.0)
+            .to('.fecha__recepcion-venue', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 1.1)
+
+            // Buttons + decorative
+            .to('.fecha .btn', { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out' }, 1.2)
+            .to('.fecha__flor', { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 0.5);
         }
       },
       {
         el: '.fiesta',
         anim: function () {
           gsap.timeline()
-            .to('.fiesta__title', { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, 0)
-            .to('.fiesta__card', { opacity: 1, y: 0, duration: 1, stagger: 0.25, ease: 'back.out(1.2)' }, 0.2)
-            .to('.fiesta__deco--grapes', { opacity: 0.4, duration: 1.4, ease: 'power1.inOut' }, 0.3)
-            .to('.fiesta__deco--cart', { opacity: 0.25, duration: 1.4, ease: 'power1.inOut' }, 0.5);
+            .to('.fiesta__title', {
+              opacity: 1, y: 0, filter: 'blur(0px)',
+              duration: 1.2, ease: 'power3.out'
+            }, 0)
+            .to('.fiesta__card', {
+              opacity: 1, y: 0, scale: 1,
+              duration: 1.2, stagger: 0.3, ease: 'power3.out'
+            }, 0.3)
+            .to('#btn-confirmar', {
+              opacity: 1, y: 0, scale: 1,
+              duration: 1, ease: 'elastic.out(1, 0.8)'
+            }, 1.0)
+            .to('.fiesta__flor2', { opacity: 1, x: 0, duration: 1.5, ease: 'power2.out' }, 0.5)
+            .to('.fiesta__flor3', { opacity: 1, x: 0, duration: 1.5, ease: 'power2.out' }, 0.8);
         }
       }
     ];
@@ -137,7 +192,7 @@
         if (fn) fn();
         scrollObs.unobserve(entry.target);
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
     sectionDefs.forEach(function (def) {
       var el = document.querySelector(def.el);
@@ -160,10 +215,10 @@
     var sealImg = seal && seal.querySelector('.intro__seal-img');
     var sealGlow = seal && seal.querySelector('.intro__seal-glow');
     var sealRing = seal && seal.querySelector('.intro__seal-ring');
-    var flapLeft = document.getElementById('intro-flap-left');
-    var flapRight = document.getElementById('intro-flap-right');
     var glow = intro && intro.querySelector('.intro__glow');
     var glow2 = intro && intro.querySelector('.intro__glow2');
+    var fragments = intro ? intro.querySelectorAll('.intro__fragment') : [];
+
     if (!intro || !canvas || typeof gsap === 'undefined') return;
 
     // ============================
@@ -175,6 +230,9 @@
     var particleRunning = true;
     var burstActive = false;
     var burstParticles = [];
+    // Fiber particles (torn threads)
+    var fiberActive = false;
+    var fiberParticles = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -184,8 +242,8 @@
     window.addEventListener('resize', resizeCanvas);
 
     // Two layers: slow ambient + faster near-seal particles
-    for (var i = 0; i < 80; i++) {
-      var isSlow = i < 45;
+    for (var i = 0; i < 90; i++) {
+      var isSlow = i < 50;
       particles.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
@@ -234,8 +292,8 @@
           var bp = burstParticles[j];
           bp.x += bp.vx;
           bp.y += bp.vy;
-          bp.vy += 0.03; // gravity
-          bp.life -= 0.012;
+          bp.vy += 0.02;
+          bp.life -= 0.008;
           if (bp.life <= 0) { burstParticles.splice(j, 1); continue; }
 
           var ba = bp.life * bp.alpha;
@@ -252,26 +310,75 @@
         if (burstParticles.length === 0) burstActive = false;
       }
 
+      // Fiber particles (torn burlap threads)
+      if (fiberActive) {
+        for (var k = fiberParticles.length - 1; k >= 0; k--) {
+          var fp = fiberParticles[k];
+          fp.x += fp.vx;
+          fp.y += fp.vy;
+          fp.vy += 0.08; // gravity
+          fp.rotation += fp.spin;
+          fp.life -= 0.006;
+          if (fp.life <= 0) { fiberParticles.splice(k, 1); continue; }
+
+          ctx.save();
+          ctx.translate(fp.x, fp.y);
+          ctx.rotate(fp.rotation);
+          ctx.globalAlpha = fp.life * 0.7;
+          ctx.strokeStyle = fp.color;
+          ctx.lineWidth = fp.width;
+          ctx.beginPath();
+          ctx.moveTo(-fp.len / 2, 0);
+          ctx.quadraticCurveTo(0, fp.curve, fp.len / 2, 0);
+          ctx.stroke();
+          ctx.restore();
+        }
+        if (fiberParticles.length === 0) fiberActive = false;
+      }
+
       requestAnimationFrame(drawParticles);
     }
     requestAnimationFrame(drawParticles);
 
-    // Spawn burst particles from center
     function spawnBurst(count) {
       var cx = canvas.width / 2;
       var cy = canvas.height / 2;
       burstActive = true;
       for (var i = 0; i < count; i++) {
-        var angle = (Math.PI * 2 * i / count) + (Math.random() - 0.5) * 0.5;
-        var speed = 2 + Math.random() * 5;
+        var angle = (Math.PI * 2 * i / count) + (Math.random() - 0.5) * 0.6;
+        var speed = 1.5 + Math.random() * 6;
         burstParticles.push({
-          x: cx + (Math.random() - 0.5) * 20,
-          y: cy + (Math.random() - 0.5) * 20,
+          x: cx + (Math.random() - 0.5) * 30,
+          y: cy + (Math.random() - 0.5) * 30,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 1.5,
-          r: 2 + Math.random() * 4,
-          alpha: 0.6 + Math.random() * 0.4,
-          life: 0.7 + Math.random() * 0.3
+          vy: Math.sin(angle) * speed - 2,
+          r: 1.5 + Math.random() * 5,
+          alpha: 0.5 + Math.random() * 0.5,
+          life: 0.6 + Math.random() * 0.4
+        });
+      }
+    }
+
+    // Spawn torn burlap fibers from the center tear line
+    function spawnFibers(count) {
+      var cx = canvas.width / 2;
+      fiberActive = true;
+      var colors = ['#8B7355', '#A0896A', '#6B5B45', '#C4A97D', '#917A5C'];
+      for (var i = 0; i < count; i++) {
+        var y = Math.random() * canvas.height;
+        var side = Math.random() > 0.5 ? 1 : -1;
+        fiberParticles.push({
+          x: cx + (Math.random() - 0.5) * 60,
+          y: y,
+          vx: side * (1 + Math.random() * 3),
+          vy: -1 + Math.random() * 2,
+          len: 8 + Math.random() * 18,
+          width: 0.5 + Math.random() * 1.5,
+          curve: (Math.random() - 0.5) * 10,
+          rotation: Math.random() * Math.PI,
+          spin: (Math.random() - 0.5) * 0.08,
+          life: 0.7 + Math.random() * 0.3,
+          color: colors[Math.floor(Math.random() * colors.length)]
         });
       }
     }
@@ -282,82 +389,92 @@
     var envelope = document.getElementById('intro-envelope');
 
     // Initial states
-    gsap.set(envelope, { opacity: 0, scale: 1.04 });
-    gsap.set(seal, { opacity: 0, scale: 0.7, y: 15 });
-    gsap.set(sealImg, { filter: 'drop-shadow(0 6px 20px rgba(0,0,0,0.6)) brightness(0.8)' });
-    gsap.set(sealGlow, { opacity: 0, scale: 0.5 });
-    gsap.set(sealRing, { opacity: 0, scale: 0.8 });
-    gsap.set(tap, { opacity: 0, y: 12 });
+    gsap.set(envelope, { opacity: 0, scale: 1.03 });
+    gsap.set(seal, { opacity: 0, scale: 0.6, y: 20 });
+    gsap.set(sealImg, { filter: 'drop-shadow(0 8px 25px rgba(0,0,0,0.7)) brightness(0.7)' });
+    gsap.set(sealGlow, { opacity: 0, scale: 0.4 });
+    gsap.set(sealRing, { opacity: 0, scale: 0.7 });
+    gsap.set(tap, { opacity: 0, y: 15 });
     gsap.set(glow2, { scale: 0, opacity: 0 });
 
     var entranceDone = false;
     var entranceTL = gsap.timeline({
-      delay: 0.4,
+      delay: 0.3,
       onComplete: function () { entranceDone = true; }
     });
 
     entranceTL
-      // Ambient particles fade in slowly
-      .to(particleAlpha, { value: 0.5, duration: 2, ease: 'power1.inOut' }, 0)
+      // Ambient glow fades in
+      .to(particleAlpha, { value: 0.4, duration: 2.5, ease: 'power1.inOut' }, 0)
 
-      // Envelope materializes with subtle scale
-      .to(envelope, { opacity: 1, scale: 1, duration: 2.2, ease: 'power2.out' }, 0.3)
+      // Envelope materializes
+      .to(envelope, { opacity: 1, scale: 1, duration: 2.5, ease: 'power3.out' }, 0.2)
 
-      // Particles intensify
-      .to(particleAlpha, { value: 1, duration: 1.5, ease: 'power1.inOut' }, 1.5)
+      // Particles grow
+      .to(particleAlpha, { value: 1, duration: 2, ease: 'power1.inOut' }, 1.5)
 
-      // Seal drops in with spring
+      // Seal descends with elegant spring
       .to(seal, {
-        opacity: 1, scale: 1, y: 0, duration: 1.4,
-        ease: 'elastic.out(1, 0.6)'
-      }, 1.8)
+        opacity: 1, scale: 1, y: 0, duration: 1.6,
+        ease: 'elastic.out(1, 0.5)'
+      }, 2.0)
 
-      // Seal glow + ring expand
-      .to(sealGlow, { opacity: 0.8, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.0)
-      .to(sealRing, { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' }, 2.1)
-
-      // Seal illuminates
+      // Seal illumination sequence
       .to(sealImg, {
-        filter: 'drop-shadow(0 4px 30px rgba(191,168,128,0.5)) brightness(1.1)',
-        duration: 1.2, ease: 'power1.inOut'
-      }, 2.2)
+        filter: 'drop-shadow(0 4px 35px rgba(191,168,128,0.6)) brightness(1.15)',
+        duration: 1.5, ease: 'power2.inOut'
+      }, 2.3)
+      .to(sealGlow, { opacity: 0.9, scale: 1, duration: 1.4, ease: 'power2.out' }, 2.2)
+      .to(sealRing, { opacity: 0.8, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.4)
 
-      // Subtle inner glow reveals
-      .to(glow2, { scale: 0.6, opacity: 0.4, duration: 1.5, ease: 'power1.out' }, 2.5)
+      // Inner glow
+      .to(glow2, { scale: 0.5, opacity: 0.35, duration: 1.8, ease: 'power1.out' }, 2.8)
 
-      // Tap text slides up
-      .to(tap, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 3.0);
+      // Tap prompt
+      .to(tap, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 3.5);
 
     // Breathing loops
     var sealPulse = gsap.to(sealGlow, {
-      scale: 1.35, opacity: 0.3, duration: 3,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.2
+      scale: 1.4, opacity: 0.25, duration: 3.2,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.8
     });
 
     var ringPulse = gsap.to(sealRing, {
-      scale: 1.15, opacity: 0.15, duration: 3,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.5
+      scale: 1.2, opacity: 0.12, duration: 3.2,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.0
     });
 
     var sealFloat = gsap.to(seal, {
-      y: -4, duration: 2.5,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.2
+      y: -5, duration: 2.8,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.8
     });
 
     var tapPulse = gsap.to(tap, {
-      opacity: 0.55, duration: 2.8, ease: 'sine.inOut',
-      repeat: -1, yoyo: true, delay: 4.5
+      opacity: 0.5, duration: 3, ease: 'sine.inOut',
+      repeat: -1, yoyo: true, delay: 5.0
     });
 
     var glow2Pulse = gsap.to(glow2, {
-      scale: 0.7, opacity: 0.25, duration: 3.5,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.5
+      scale: 0.65, opacity: 0.2, duration: 3.5,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 5.0
     });
 
     // ============================
-    // CLICK — DRAMATIC SEAL BREAK + CINEMATIC OPEN
+    // CLICK — TEAR THE ENVELOPE
     // ============================
     var phase = 0;
+
+    // Each fragment gets unique physics for the tear
+    var fragPhysics = [
+      // Left fragments: fly left/up
+      { x: '-120%', y: '-30%', rotation: -25, delay: 0.1 },
+      { x: '-100%', y: '15%',  rotation: -18, delay: 0.2 },
+      { x: '-90%',  y: '50%',  rotation: -30, delay: 0.15 },
+      // Right fragments: fly right/down
+      { x: '120%',  y: '-25%', rotation: 22,  delay: 0.12 },
+      { x: '100%',  y: '20%',  rotation: 28,  delay: 0.18 },
+      { x: '110%',  y: '45%',  rotation: 20,  delay: 0.22 }
+    ];
 
     intro.addEventListener('click', function () {
       if (phase !== 0 || !entranceDone) return;
@@ -378,63 +495,70 @@
       var openTL = gsap.timeline();
 
       openTL
-        // === BEAT 1: Seal cracks (0 - 0.6s) ===
-        // Quick dramatic zoom + shake on seal
-        .to(tap, { opacity: 0, y: 10, duration: 0.25, ease: 'power2.in' }, 0)
-        .to(seal, {
-          scale: 1.3, duration: 0.15, ease: 'power4.in',
-          onComplete: function () { spawnBurst(50); }
-        }, 0)
-        .to(seal, { scale: 1.15, duration: 0.1, ease: 'power2.out' }, 0.15)
-        // Seal shatters with rotation + fly up
+        // === BEAT 1: Seal impact (0 - 0.5s) ===
+        .to(tap, { opacity: 0, y: 12, duration: 0.2, ease: 'power3.in' }, 0)
+
+        // Seal pulses inward then bursts
+        .to(seal, { scale: 1.25, duration: 0.12, ease: 'power4.in' }, 0)
+        .to(seal, { scale: 1.1, duration: 0.08, ease: 'power2.out' }, 0.12)
+        .add(function () {
+          spawnBurst(70);
+          spawnFibers(40);
+        }, 0.15)
+
+        // Seal blazes white-hot
         .to(sealImg, {
-          filter: 'drop-shadow(0 0 40px rgba(255,220,150,0.9)) brightness(2)',
-          duration: 0.3, ease: 'power2.in'
+          filter: 'drop-shadow(0 0 50px rgba(255,220,150,1)) brightness(2.5)',
+          duration: 0.25, ease: 'power2.in'
         }, 0.1)
-        .to(sealGlow, { scale: 3, opacity: 0.9, duration: 0.5, ease: 'power2.out' }, 0.15)
-        .to(sealRing, { scale: 2.5, opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.15)
+        .to(sealGlow, { scale: 4, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.15)
+        .to(sealRing, { scale: 3, opacity: 0, duration: 0.5, ease: 'power2.out' }, 0.15)
+
+        // Seal disintegrates upward
         .to(seal, {
-          scale: 0.3, opacity: 0, rotation: 15, y: -80,
-          duration: 0.7, ease: 'power3.in'
-        }, 0.3)
+          scale: 0.2, opacity: 0, y: -100, rotation: 20,
+          duration: 0.8, ease: 'power3.in'
+        }, 0.25)
 
-        // === BEAT 2: Golden light erupts (0.5 - 1.5s) ===
-        .to(glow, { scale: 0.8, opacity: 0.8, duration: 0.8, ease: 'power2.out' }, 0.5)
-        .to(glow2, { scale: 1.2, opacity: 0.7, duration: 0.8, ease: 'power2.out' }, 0.6)
-        .to(sealGlow, { scale: 5, opacity: 0, duration: 1, ease: 'power1.out' }, 0.7)
+        // === BEAT 2: Light erupts from tear line (0.4 - 1.2s) ===
+        .to(glow, { scale: 0.7, opacity: 0.9, duration: 0.7, ease: 'power2.out' }, 0.4)
+        .to(glow2, { scale: 1, opacity: 0.8, duration: 0.7, ease: 'power2.out' }, 0.5)
+        .to(sealGlow, { scale: 6, opacity: 0, duration: 1.2, ease: 'power1.out' }, 0.6)
 
-        // === BEAT 3: Flaps open with 3D rotation (0.8 - 2.5s) ===
-        .to(flapLeft, {
-          rotationY: 120, x: '-30%',
-          duration: 1.8, ease: 'power3.inOut'
-        }, 0.8)
-        .to(flapRight, {
-          rotationY: -120, x: '30%',
-          duration: 1.8, ease: 'power3.inOut'
-        }, 0.85)
+        // === BEAT 3: Fragments tear away (0.6 - 2.5s) ===
+        // Each fragment flies out with unique trajectory and timing
+        .add(function () {
+          fragments.forEach(function (frag, idx) {
+            var phys = fragPhysics[idx];
+            gsap.to(frag, {
+              x: phys.x,
+              y: phys.y,
+              rotation: phys.rotation,
+              opacity: 0,
+              duration: 1.6 + Math.random() * 0.4,
+              delay: phys.delay,
+              ease: 'power3.in'
+            });
+          });
+        }, 0.6)
 
-        // Flaps slide out fully
-        .to(flapLeft, {
-          x: '-110%', opacity: 0,
-          duration: 0.8, ease: 'power2.in'
-        }, 2.2)
-        .to(flapRight, {
-          x: '110%', opacity: 0,
-          duration: 0.8, ease: 'power2.in'
-        }, 2.25)
+        // Second wave of fibers as fragments separate
+        .add(function () { spawnFibers(25); }, 1.0)
 
-        // === BEAT 4: Light swells + particles dissolve (1.5 - 3s) ===
-        .to(glow, { scale: 1.5, opacity: 1, duration: 1, ease: 'power1.out' }, 1.5)
-        .to(glow2, { scale: 2, opacity: 0.5, duration: 1, ease: 'power1.out' }, 1.6)
-        .to(particleAlpha, { value: 1.5, duration: 0.6, ease: 'power1.in' }, 1.5)
-        .to(particleAlpha, { value: 0, duration: 1, ease: 'power2.in' }, 2.2)
+        // === BEAT 4: Golden light expands (1.2 - 2.8s) ===
+        .to(glow, { scale: 1.8, opacity: 1, duration: 1.2, ease: 'power1.out' }, 1.2)
+        .to(glow2, { scale: 2.5, opacity: 0.6, duration: 1.2, ease: 'power1.out' }, 1.3)
 
-        // Glows expand and dissolve
-        .to(glow, { scale: 3, opacity: 0, duration: 1.2, ease: 'power1.in' }, 2.5)
-        .to(glow2, { scale: 3, opacity: 0, duration: 1, ease: 'power1.in' }, 2.6)
+        // Particles swell then dissolve
+        .to(particleAlpha, { value: 1.8, duration: 0.8, ease: 'power1.in' }, 1.2)
+        .to(particleAlpha, { value: 0, duration: 1.2, ease: 'power2.in' }, 2.2)
 
-        // === BEAT 5: White flash reveal (2.8 - 3.6s) ===
-        .to(flash, { opacity: 1, duration: 1, ease: 'power2.inOut' }, 2.8)
+        // Glows dissolve
+        .to(glow, { scale: 3.5, opacity: 0, duration: 1.2, ease: 'power1.in' }, 2.5)
+        .to(glow2, { scale: 3.5, opacity: 0, duration: 1, ease: 'power1.in' }, 2.6)
+
+        // === BEAT 5: Warm flash to page (2.8 - 4s) ===
+        .to(flash, { opacity: 1, duration: 1.2, ease: 'power2.inOut' }, 2.8)
 
         // Cleanup
         .add(function () {
@@ -443,7 +567,7 @@
           intro.remove();
           document.documentElement.classList.remove('intro-active');
           if (revealHero) revealHero();
-        }, 3.8);
+        }, 4.0);
     });
   }
 
