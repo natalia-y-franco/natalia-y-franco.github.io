@@ -207,7 +207,7 @@ img {
 /* --- Small dog video pip --- */
 .dog-pip {
   position: relative;
-  z-index: 10;
+  z-index: 15;
   width: 80px;
   height: 80px;
   min-height: 80px;
