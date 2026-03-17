@@ -61,7 +61,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: #F1F1F1;
+  background: #FAF8F5;
   color: var(--brown);
   overflow-x: hidden;
   overflow-x: clip;
@@ -88,7 +88,7 @@ img {
   min-height: 600px;
   max-height: 960px;
   overflow: visible;
-  background: #F1F1F1;
+  background: #FAF8F5;
 }
 
 .hero__photo {
@@ -103,7 +103,7 @@ img {
   position: absolute;
   left: 0; right: 0; bottom: -1px;
   height: 45%;
-  background: linear-gradient(to bottom, transparent 0%, rgba(241,241,241,0.35) 30%, rgba(241,241,241,0.75) 50%, rgba(241,241,241,0.95) 65%, #F1F1F1 80%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(250,248,245,0.35) 30%, rgba(250,248,245,0.75) 50%, rgba(250,248,245,0.95) 65%, #FAF8F5 80%);
   z-index: 1;
   pointer-events: none;
 }
@@ -111,8 +111,8 @@ img {
 .hero__photo img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center center;
+  object-fit: cover;
+  object-position: center top;
   filter: none;
 }
 
@@ -315,7 +315,7 @@ img {
   left: 0;
   right: 0;
   bottom: -20px;
-  background: #F1F1F1;
+  background: #FAF8F5;
   z-index: 0;
 }
 
