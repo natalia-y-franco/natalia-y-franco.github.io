@@ -8,6 +8,8 @@
   // ============================
   // CONFIGURACIÓN
   // ============================
+  var SKIP_INTRO = false;
+
   // Pega aquí la URL de tu Google Apps Script desplegado
   var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYSHCf-zHTPKuvnms_6e_miHZzn3lAAZIp1wtHepb0kUAeImIzTS-9ZOlUnVqOLmXr/exec';
 
@@ -422,6 +424,14 @@
   // Iniciar animaciones de página
   initPageAnimations();
 
+  // Saltar intro en modo desarrollo
+  function skipIntro() {
+    var intro = document.getElementById('intro');
+    if (intro) intro.remove();
+    document.documentElement.classList.remove('intro-active');
+    if (revealHero) revealHero();
+  }
+
   // Si hay token, buscar info del invitado primero
   if (guestToken && isConfigured()) {
     Promise.race([
@@ -440,10 +450,10 @@
       .catch(function () { /* timeout o error — continuar sin personalización */ })
       .then(function () {
         personalizeContent();
-        initIntro();
+        if (SKIP_INTRO) skipIntro(); else initIntro();
       });
   } else {
-    initIntro();
+    if (SKIP_INTRO) skipIntro(); else initIntro();
   }
 
   // ============================
@@ -509,8 +519,22 @@
     document.body.classList.add('modal-open');
   });
 
+  document.getElementById('btn-mapa-ceremonia').addEventListener('click', function () {
+    var screen = document.getElementById('screen-mapa-ceremonia');
+    screen.classList.add('is-open');
+    screen.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  });
+
   document.getElementById('btn-close-mapa').addEventListener('click', function () {
     var screen = document.getElementById('screen-mapa');
+    screen.classList.remove('is-open');
+    screen.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+  });
+
+  document.getElementById('btn-close-mapa-ceremonia').addEventListener('click', function () {
+    var screen = document.getElementById('screen-mapa-ceremonia');
     screen.classList.remove('is-open');
     screen.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
@@ -797,12 +821,12 @@
   }
 
   // ============================
-  // LEAFLET MAP
+  // LEAFLET MAP — RECEPCIÓN
   // ============================
-  var mapInitialized = false;
+  var mapRecepcionInit = false;
 
   document.getElementById('btn-mapa').addEventListener('click', function () {
-    if (!mapInitialized) {
+    if (!mapRecepcionInit) {
       setTimeout(function () {
         var map = L.map('leaflet-map', {
           zoomControl: false
@@ -827,7 +851,42 @@
           });
 
         setTimeout(function () { map.invalidateSize(); }, 200);
-        mapInitialized = true;
+        mapRecepcionInit = true;
+      }, 100);
+    }
+  });
+
+  // LEAFLET MAP — CEREMONIA
+  // ============================
+  var mapCeremoniaInit = false;
+
+  document.getElementById('btn-mapa-ceremonia').addEventListener('click', function () {
+    if (!mapCeremoniaInit) {
+      setTimeout(function () {
+        var map = L.map('leaflet-map-ceremonia', {
+          zoomControl: false
+        }).setView([-34.5890144, -70.9993982], 16);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          attribution: '',
+          maxZoom: 19
+        }).addTo(map);
+
+        var customIcon = L.icon({
+          iconUrl: 'assets/marcador-gps.svg',
+          iconSize: [44, 46],
+          iconAnchor: [22, 42],
+          popupAnchor: [0, -42]
+        });
+
+        L.marker([-34.5890144, -70.9993982], { icon: customIcon })
+          .addTo(map)
+          .on('click', function () {
+            window.open('https://www.google.com/maps/dir/?api=1&destination=-34.5890144,-70.9993982&destination_place_id=0x9664901dad22c5f7:0x671b2c9a43b3491e&travelmode=driving', '_blank');
+          });
+
+        setTimeout(function () { map.invalidateSize(); }, 200);
+        mapCeremoniaInit = true;
       }, 100);
     }
   });

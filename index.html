@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;700&family=Birthstone&family=Nunito:wght@200;300;500&family=Playfair+Display:wght@400;500&family=Waterfall&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;700&family=Beau+Rivage&family=Birthstone&family=Nunito:wght@200;300;500&family=Playfair+Display:wght@400;500&family=Waterfall&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css">
@@ -43,7 +43,7 @@
   <!-- ===== HERO SECTION ===== -->
   <section class="hero">
     <div class="hero__photo">
-      <img src="assets/foto-banner.jpg" alt="Natalia y Franco">
+      <img src="assets/background-banner.jpg" alt="Natalia y Franco">
     </div>
     <div class="hero__overlay">
       <div class="hero__date">
@@ -87,25 +87,34 @@
 
   <!-- ===== MESSAGE ===== -->
   <section class="message">
-    <img src="assets/Vector.svg" alt="" class="message__leaf" aria-hidden="true">
-    <p class="message__text">¡Nos encantaría compartir este<br>momento contigo!</p>
+    <p class="message__text">El destino nos unió, el amor maduró entre nosotros y hoy elegimos caminar juntos para siempre. Con mucha emoción queremos invitarlos a celebrar con nosotros nuestra boda.</p>
+    <img src="assets/bajada-intro.svg" alt="" class="message__bajada" aria-hidden="true">
   </section>
 
   <!-- ===== FECHA SECTION ===== -->
   <section class="fecha">
+    <img src="assets/vector-ramo-manzanilla.svg" alt="" class="fecha__manzanilla" aria-hidden="true">
+    <img src="assets/vector-flor.svg" alt="" class="fecha__flor" aria-hidden="true">
     <h2 class="fecha__title">Fecha</h2>
-    <p class="fecha__day">Viernes 1 de mayo - 19 hrs</p>
-    <p class="fecha__venue">Centro de Eventos Claro de Luna</p>
-    <p class="fecha__city">San Fernando</p>
-    <p class="fecha__status" id="confirm-status" style="display:none;"></p>
-    <button class="btn btn--primary" id="btn-confirmar">Confirmar asistencia</button>
+    <p class="fecha__day">Viernes 1 de mayo 2026</p>
+    <p class="fecha__ceremonia">CEREMONIA</p>
+    <p class="fecha__capilla">Capilla de María</p>
+    <p class="fecha__direccion">Dirección</p>
+    <p class="fecha__direccion-detalle">Yumbel 20, San Fernando</p>
+    <p class="fecha__hora">16:30 horas</p>
+    <button class="btn btn--link" id="btn-mapa-ceremonia">Ver mapa de ubicación</button>
+
+    <p class="fecha__recepcion">RECEPCIÓN Y FIESTA</p>
+    <p class="fecha__recepcion-venue">Centro de Eventos Claro de Luna</p>
+    <p class="fecha__direccion">Dirección</p>
+    <p class="fecha__direccion-detalle">Cruce I-181, Fundo del Medio,<br>Cruce I-151, San Fernando</p>
     <button class="btn btn--link" id="btn-mapa">Ver mapa de ubicación</button>
+
+    <p class="fecha__status" id="confirm-status" style="display:none;"></p>
   </section>
 
   <!-- ===== LA FIESTA SECTION ===== -->
   <section class="fiesta">
-    <!-- Decorative grapes -->
-    <img src="assets/racimo-de-uvas.png" alt="" class="fiesta__deco fiesta__deco--grapes" aria-hidden="true">
     <!-- Decorative waves behind música card -->
     <img src="assets/vector-4.svg" alt="" class="fiesta__wave fiesta__wave--back" aria-hidden="true">
     <img src="assets/vector-5.svg" alt="" class="fiesta__wave fiesta__wave--front" aria-hidden="true">
@@ -117,7 +126,7 @@
       <div class="fiesta__card">
         <h3 class="fiesta__card-heading">Dress Code</h3>
         <img src="assets/dress-code.png" alt="Dress Code" class="fiesta__card-icon">
-        <p class="fiesta__card-text">Para acompañarnos en esta noche tan especial, <strong>les pedimos asistir con atuendo formal.</strong></p>
+        <p class="fiesta__card-text">Para acompañarnos en esta noche tan especial, les pedimos asistir con atuendo formal y reservar el blanco, marfil y tonos muy claros exclusivamente para la novia.</p>
       </div>
 
       <!-- Música Card -->
@@ -126,20 +135,34 @@
         <img src="assets/musica.png" alt="Música" class="fiesta__card-icon fiesta__card-icon--music">
         <p class="fiesta__card-text">¿Que canción no puede faltar en la fiesta?</p>
         <div class="fiesta__qr">
-          <img src="assets/qr-spotify.jpeg" alt="QR Spotify" class="fiesta__qr-img">
+          <img src="assets/qrcode-final.png" alt="QR Spotify" class="fiesta__qr-img">
         </div>
         <a href="https://open.spotify.com/playlist/6xwxXEeLFj0UlWe9L6RPQ2?si=pH7RB2ECRJKkMrP7yIBusg&pt=0d346228aabaf6ab8ea50b5609360bf8" class="btn btn--primary" id="btn-playlist" target="_blank" rel="noopener">Ir a la playlist</a>
       </div>
     </div>
 
-    <!-- Decorative cart -->
-    <img src="assets/carreta.png" alt="" class="fiesta__deco fiesta__deco--cart" aria-hidden="true">
+    <button class="btn btn--primary" id="btn-confirmar" style="margin-top: 50px;">Confirmar asistencia</button>
+
+    <img src="assets/vector-flor2.svg" alt="" class="fiesta__flor2" aria-hidden="true">
+    <img src="assets/vector-flor3.svg" alt="" class="fiesta__flor3" aria-hidden="true">
+
   </section>
 
-  <!-- ===== MAP FULLSCREEN ===== -->
+  <!-- ===== MAP FULLSCREEN — CEREMONIA ===== -->
+  <div class="fullscreen" id="screen-mapa-ceremonia" aria-hidden="true">
+    <div class="fullscreen__content fullscreen__content--map">
+      <h2 class="fullscreen__title">Ceremonia</h2>
+      <div class="fullscreen__map-frame">
+        <div id="leaflet-map-ceremonia" style="width:100%;height:100%;"></div>
+        <button class="fullscreen__close fullscreen__close--map" id="btn-close-mapa-ceremonia" aria-label="Cerrar">X</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAP FULLSCREEN — RECEPCIÓN ===== -->
   <div class="fullscreen" id="screen-mapa" aria-hidden="true">
     <div class="fullscreen__content fullscreen__content--map">
-      <h2 class="fullscreen__title">Ubicación</h2>
+      <h2 class="fullscreen__title">Recepción</h2>
       <div class="fullscreen__map-frame">
         <div id="leaflet-map" style="width:100%;height:100%;"></div>
         <button class="fullscreen__close fullscreen__close--map" id="btn-close-mapa" aria-label="Cerrar">X</button>

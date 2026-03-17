@@ -57,11 +57,15 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-body);
-  background: var(--cream);
+  background: #F1F1F1;
   color: var(--brown);
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -79,12 +83,13 @@ img {
 .hero {
   position: relative;
   width: 100%;
-  height: 90vh;
-  min-height: 640px;
-  max-height: 900px;
+  height: 100vh;
+  min-height: 700px;
+  max-height: 960px;
   overflow-x: hidden;
   overflow-x: clip;
   overflow-y: visible;
+  background: #fbf9fc;
 }
 
 .hero__photo {
@@ -98,16 +103,16 @@ img {
   content: '';
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
-  background: rgba(80, 40, 10, 0.3);
+  background: none;
   z-index: 1;
 }
 
 .hero__photo img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  filter: sepia(0.18) saturate(1.2) brightness(1.05) contrast(1.05);
+  object-fit: contain;
+  object-position: center center;
+  filter: none;
 }
 
 .hero__overlay {
@@ -138,36 +143,35 @@ img {
   display: block;
   width: 40px;
   height: 1px;
-  background: #FFFFFF;
+  background: #C9B797;
   border-radius: 1px;
 }
 
 .hero__date-text {
-  font-family: var(--font-body);
-  font-weight: 200;
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 400;
   font-size: 24px;
   line-height: 32px;
   letter-spacing: 0;
-  color: var(--white);
+  color: #363636;
 }
 
 .hero__names {
-  font-family: var(--font-script-alt);
+  font-family: 'Waterfall', cursive;
   font-weight: 400;
-  font-size: clamp(80px, 38vw, 140px);
-  line-height: clamp(48px, 22vw, 80px);
+  font-size: 140px;
+  line-height: 80px;
   letter-spacing: 0;
   text-align: center;
-  color: #FFFFFF;
+  color: #363636;
   margin-top: 16px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
 .hero__line-bottom {
   display: block;
   width: 80px;
   height: 1px;
-  background: #FFFFFF;
+  background: #BFA880;
   border-radius: 1px;
   margin-top: 16px;
 }
@@ -259,8 +263,19 @@ img {
   text-align: center;
   display: flex;
   justify-content: center;
-  margin-top: -148px;
+  margin-top: -300px;
   margin-bottom: 20px;
+}
+
+.countdown::before {
+  content: '';
+  position: absolute;
+  top: 100px;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  background: #F1F1F1;
+  z-index: 0;
 }
 
 .countdown__bubble {
@@ -370,13 +385,19 @@ img {
 .message__text {
   position: relative;
   z-index: 1;
-  font-family: 'Abhaya Libre', serif;
+  font-family: 'Beau Rivage', cursive;
   font-weight: 400;
-  font-size: 24px;
+  font-size: 28px;
   line-height: 32px;
   letter-spacing: 0;
   text-align: center;
   color: #363636;
+}
+
+.message__bajada {
+  display: block;
+  margin: 4px auto 0;
+  opacity: 0.8;
 }
 
 /* ========================================
@@ -411,9 +432,32 @@ img {
    FECHA
    ======================================== */
 .fecha {
+  position: relative;
   text-align: center;
-  padding: 0 32px 32px;
+  padding: 0 32px 44px 32px;
   margin-top: 58px;
+}
+
+.fecha__manzanilla {
+  position: absolute;
+  width: 66px;
+  right: 0px;
+  height: 116px;
+  top: 50px;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fecha__flor {
+  position: absolute;
+  width: 233px;
+  height: 425px;
+  left: -50px;
+  bottom: -50px;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .fecha__title {
@@ -435,7 +479,85 @@ img {
   letter-spacing: 0;
   text-align: center;
   color: #363636;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.fecha__ceremonia {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #BFA880;
+  margin-bottom: 4px;
+}
+
+.fecha__capilla {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #363636;
+  margin-bottom: 0;
+}
+
+.fecha__direccion {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #363636;
+  margin-bottom: 0;
+}
+
+.fecha__direccion-detalle {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #363636;
+  margin-bottom: 0;
+}
+
+.fecha__hora {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #363636;
+  margin-bottom: 4px;
+}
+
+.fecha__recepcion {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #BFA880;
+  margin-top: 30px;
+  margin-bottom: 4px;
+}
+
+.fecha__recepcion-venue {
+  font-family: 'Abhaya Libre', serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #363636;
+  margin-bottom: 0;
 }
 
 .fecha__venue {
@@ -513,7 +635,15 @@ img {
 
 #btn-confirmar {
   font-family: 'Abhaya Libre', serif;
-  font-weight: 400;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: 0;
+  color: #FFFFFF;
+  background: #BFA880;
+  border: 1px solid #FFF;
+  box-shadow: 0px 6px 16px 0px #00000066;
+  width: 319px;
 }
 
 .btn--primary:hover,
@@ -576,10 +706,11 @@ img {
 .fiesta {
   position: relative;
   text-align: center;
-  padding: 170px 28px 230px;
+  padding: 80px 28px 150px;
   overflow-x: hidden;
   overflow-x: clip;
   overflow-y: visible;
+  background: url('assets/background-bottom.svg') top center / 100% auto no-repeat;
 }
 
 .fiesta__title {
@@ -590,7 +721,7 @@ img {
   letter-spacing: 0;
   text-align: center;
   color: #363636;
-  margin-bottom: 18px;
+  margin-bottom: 32px;
 }
 
 .fiesta__deco {
@@ -637,6 +768,7 @@ img {
   box-shadow: 0px 9px 16px 0px #0000003D;
   width: 100%;
   margin: 0 auto;
+  z-index: 5;
 }
 
 .fiesta__card .btn--primary {
@@ -690,7 +822,7 @@ img {
 .fiesta__card-text {
   font-family: 'Abhaya Libre', serif;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 28px;
   letter-spacing: 0;
   text-align: center;
@@ -700,6 +832,28 @@ img {
 .fiesta__card-text strong {
   font-weight: 300;
   color: #363636;
+}
+
+.fiesta__flor2 {
+  position: absolute;
+  width: 233px;
+  right: 0;
+  top: 400px;
+  height: 465px;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fiesta__flor3 {
+  position: absolute;
+  height: 561px;
+  width: 253px;
+  left: 0;
+  bottom: 40px;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .fiesta__qr {
@@ -714,8 +868,9 @@ img {
 .fiesta__qr-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 8px;
+  background: #fff;
   border: 1px solid #BFA880;
   display: block;
   opacity: 0.7;
