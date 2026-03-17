@@ -161,13 +161,14 @@ img {
   font-family: 'Waterfall', cursive;
   font-weight: 400;
   font-size: clamp(90px, 36vw, 140px);
-  line-height: 0.57;
+  line-height: 0.65;
   letter-spacing: 0;
   text-align: center;
   color: #363636;
-  margin-top: 16px;
+  margin-top: 8px;
   max-width: 100%;
   padding: 0 8px;
+  overflow: visible;
 }
 
 .hero__letter {
@@ -303,7 +304,7 @@ img {
   text-align: center;
   display: flex;
   justify-content: center;
-  margin-top: -300px;
+  margin-top: clamp(-260px, -28vh, -100px);
   margin-bottom: 20px;
 }
 
