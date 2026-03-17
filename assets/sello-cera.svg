@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Wax texture gradient -->
+    <radialGradient id="wax" cx="45%" cy="40%" r="55%" fx="40%" fy="35%">
+      <stop offset="0%" stop-color="#C4463A"/>
+      <stop offset="25%" stop-color="#A83B31"/>
+      <stop offset="55%" stop-color="#8B2E25"/>
+      <stop offset="80%" stop-color="#7A2820"/>
+      <stop offset="100%" stop-color="#5E1F18"/>
+    </radialGradient>
+
+    <!-- Subtle surface shine -->
+    <radialGradient id="shine" cx="38%" cy="32%" r="40%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.18"/>
+      <stop offset="50%" stop-color="#fff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Edge shadow for depth -->
+    <radialGradient id="edge" cx="50%" cy="50%" r="50%">
+      <stop offset="75%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="92%" stop-color="#000" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.25"/>
+    </radialGradient>
+
+    <!-- Inner ring gradient -->
+    <radialGradient id="inner-ring" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="85%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="93%" stop-color="#000" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Wax drip filter for organic edge -->
+    <filter id="wax-edge" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="4" seed="8" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <!-- Subtle emboss for the stamp -->
+    <filter id="emboss" x="-2%" y="-2%" width="104%" height="104%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.6" result="blur"/>
+      <feOffset in="blur" dx="0.5" dy="0.8" result="offset"/>
+      <feComposite in="SourceGraphic" in2="offset" operator="over"/>
+    </filter>
+
+    <!-- Outer drop shadow -->
+    <filter id="drop" x="-15%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#drop)">
+    <!-- Main wax body with organic edge -->
+    <g filter="url(#wax-edge)">
+      <circle cx="100" cy="100" r="82" fill="url(#wax)"/>
+    </g>
+
+    <!-- Surface shine -->
+    <circle cx="100" cy="100" r="82" fill="url(#shine)"/>
+
+    <!-- Edge depth -->
+    <circle cx="100" cy="100" r="82" fill="url(#edge)"/>
+
+    <!-- Decorative border ring (stamped into wax) -->
+    <circle cx="100" cy="100" r="68" fill="none" stroke="#5E1F18" stroke-width="1.2" opacity="0.35"/>
+    <circle cx="100" cy="100" r="64" fill="none" stroke="#5E1F18" stroke-width="0.6" opacity="0.25"/>
+
+    <!-- Inner decorative dots around ring -->
+    <g opacity="0.2" fill="#4A1A14">
+      <circle cx="100" cy="34" r="1.5"/>
+      <circle cx="120" cy="36" r="1.3"/>
+      <circle cx="138" cy="44" r="1.5"/>
+      <circle cx="152" cy="56" r="1.3"/>
+      <circle cx="160" cy="73" r="1.5"/>
+      <circle cx="164" cy="92" r="1.3"/>
+      <circle cx="162" cy="110" r="1.5"/>
+      <circle cx="155" cy="128" r="1.3"/>
+      <circle cx="143" cy="143" r="1.5"/>
+      <circle cx="128" cy="153" r="1.3"/>
+      <circle cx="110" cy="160" r="1.5"/>
+      <circle cx="92" cy="162" r="1.3"/>
+      <circle cx="74" cy="158" r="1.5"/>
+      <circle cx="58" cy="150" r="1.3"/>
+      <circle cx="46" cy="138" r="1.5"/>
+      <circle cx="38" cy="123" r="1.3"/>
+      <circle cx="35" cy="107" r="1.5"/>
+      <circle cx="36" cy="88" r="1.3"/>
+      <circle cx="42" cy="71" r="1.5"/>
+      <circle cx="52" cy="56" r="1.3"/>
+      <circle cx="65" cy="44" r="1.5"/>
+      <circle cx="82" cy="37" r="1.3"/>
+    </g>
+
+    <!-- Monogram: N & F -->
+    <g filter="url(#emboss)">
+      <!-- Ampersand -->
+      <text x="100" y="108" text-anchor="middle" dominant-baseline="central"
+            font-family="'Waterfall', 'Birthstone', cursive" font-size="42" font-weight="400"
+            fill="#4A1A14" opacity="0.6" letter-spacing="2">&amp;</text>
+
+      <!-- N -->
+      <text x="62" y="96" text-anchor="middle" dominant-baseline="central"
+            font-family="'Waterfall', 'Birthstone', cursive" font-size="46" font-weight="400"
+            fill="#4A1A14" opacity="0.55">N</text>
+
+      <!-- F -->
+      <text x="140" y="96" text-anchor="middle" dominant-baseline="central"
+            font-family="'Waterfall', 'Birthstone', cursive" font-size="46" font-weight="400"
+            fill="#4A1A14" opacity="0.55">F</text>
+
+      <!-- Small decorative line under & -->
+      <line x1="78" y1="126" x2="122" y2="126" stroke="#4A1A14" stroke-width="0.8" opacity="0.3"/>
+    </g>
+
+    <!-- Subtle light reflection on top-left -->
+    <ellipse cx="78" cy="68" rx="25" ry="18" fill="#fff" opacity="0.06" transform="rotate(-20 78 68)"/>
+
+    <!-- Very subtle surface imperfections -->
+    <circle cx="120" cy="75" r="3" fill="#000" opacity="0.03"/>
+    <circle cx="85" cy="130" r="4" fill="#000" opacity="0.02"/>
+    <circle cx="130" cy="120" r="2" fill="#000" opacity="0.04"/>
+  </g>
+</svg>
