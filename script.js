@@ -58,7 +58,7 @@
     gsap.set('.hero__line-bottom', { scaleX: 0 });
     gsap.set('.hero__espiga--left', { opacity: 0, x: -60, rotation: -12, scale: 0.85 });
     gsap.set('.hero__espiga--right', { opacity: 0, x: 60, rotation: 12, scale: 0.85 });
-    gsap.set('.hero__dog', { opacity: 0, scale: 0.7 });
+    gsap.set('.hero__dog', { opacity: 0, scale: 0.7, xPercent: -50 });
 
     // --- Initial hidden states: Countdown ---
     gsap.set('.countdown__bubble', { opacity: 0, y: 40, scale: 0.85 });
@@ -128,7 +128,7 @@
 
         // Small dog video appears gently in the corner
         .to('.hero__dog', {
-          opacity: 1, scale: 1, duration: 1.4,
+          opacity: 1, scale: 1, xPercent: -50, duration: 1.4,
           ease: 'power2.out'
         }, 2.0)
         .add(function () {
