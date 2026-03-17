@@ -8,7 +8,7 @@
   // ============================
   // CONFIGURACIÓN
   // ============================
-  var SKIP_INTRO = false;
+  var SKIP_INTRO = false; // DEV FLAG: cambiar a true para saltarse la intro
 
   // Pega aquí la URL de tu Google Apps Script desplegado
   var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYSHCf-zHTPKuvnms_6e_miHZzn3lAAZIp1wtHepb0kUAeImIzTS-9ZOlUnVqOLmXr/exec';
@@ -159,19 +159,22 @@
     var seal = document.getElementById('intro-seal');
     var sealImg = seal && seal.querySelector('.intro__seal-img');
     var sealGlow = seal && seal.querySelector('.intro__seal-glow');
+    var sealRing = seal && seal.querySelector('.intro__seal-ring');
     var flapLeft = document.getElementById('intro-flap-left');
     var flapRight = document.getElementById('intro-flap-right');
     var glow = intro && intro.querySelector('.intro__glow');
-
+    var glow2 = intro && intro.querySelector('.intro__glow2');
     if (!intro || !canvas || typeof gsap === 'undefined') return;
 
     // ============================
-    // CANVAS — GOLDEN DUST MOTES
+    // CANVAS — LAYERED GOLDEN DUST
     // ============================
     var ctx = canvas.getContext('2d');
     var particles = [];
     var particleAlpha = { value: 0 };
     var particleRunning = true;
+    var burstActive = false;
+    var burstParticles = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -180,16 +183,20 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    for (var i = 0; i < 55; i++) {
+    // Two layers: slow ambient + faster near-seal particles
+    for (var i = 0; i < 80; i++) {
+      var isSlow = i < 45;
       particles.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        r: 1 + Math.random() * 3.5,
-        alpha: 0.08 + Math.random() * 0.35,
-        drift: 0.15 + Math.random() * 0.5,
+        r: isSlow ? (1.5 + Math.random() * 3) : (0.8 + Math.random() * 2),
+        alpha: isSlow ? (0.06 + Math.random() * 0.25) : (0.15 + Math.random() * 0.45),
+        drift: isSlow ? (0.1 + Math.random() * 0.35) : (0.3 + Math.random() * 0.7),
         phase: Math.random() * Math.PI * 2,
-        speed: 0.001 + Math.random() * 0.004,
-        vy: -0.08 - Math.random() * 0.25
+        speed: isSlow ? (0.0008 + Math.random() * 0.003) : (0.002 + Math.random() * 0.006),
+        vy: isSlow ? (-0.06 - Math.random() * 0.18) : (-0.15 - Math.random() * 0.35),
+        shimmer: Math.random() * Math.PI * 2,
+        shimmerSpeed: 0.001 + Math.random() * 0.003
       });
     }
 
@@ -197,18 +204,22 @@
       if (!particleRunning) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Main dust
       for (var i = 0; i < particles.length; i++) {
         var p = particles[i];
         var xOff = Math.sin(time * p.speed + p.phase) * 35 * p.drift;
         p.y += p.vy;
         if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
 
+        var shimmerMod = 0.7 + 0.3 * Math.sin(time * p.shimmerSpeed + p.shimmer);
         var cx = p.x + xOff;
         var cy = p.y;
-        var a = p.alpha * particleAlpha.value;
+        var a = p.alpha * particleAlpha.value * shimmerMod;
+
         var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, p.r);
-        grad.addColorStop(0, 'rgba(220,195,150,' + a.toFixed(3) + ')');
-        grad.addColorStop(0.6, 'rgba(191,168,128,' + (a * 0.4).toFixed(3) + ')');
+        grad.addColorStop(0, 'rgba(255,235,180,' + (a * 1.2).toFixed(3) + ')');
+        grad.addColorStop(0.4, 'rgba(220,195,150,' + a.toFixed(3) + ')');
+        grad.addColorStop(0.7, 'rgba(191,168,128,' + (a * 0.3).toFixed(3) + ')');
         grad.addColorStop(1, 'rgba(191,168,128,0)');
 
         ctx.beginPath();
@@ -217,53 +228,134 @@
         ctx.fill();
       }
 
+      // Burst particles (on seal break)
+      if (burstActive) {
+        for (var j = burstParticles.length - 1; j >= 0; j--) {
+          var bp = burstParticles[j];
+          bp.x += bp.vx;
+          bp.y += bp.vy;
+          bp.vy += 0.03; // gravity
+          bp.life -= 0.012;
+          if (bp.life <= 0) { burstParticles.splice(j, 1); continue; }
+
+          var ba = bp.life * bp.alpha;
+          var bGrad = ctx.createRadialGradient(bp.x, bp.y, 0, bp.x, bp.y, bp.r);
+          bGrad.addColorStop(0, 'rgba(255,230,160,' + ba.toFixed(3) + ')');
+          bGrad.addColorStop(0.5, 'rgba(220,185,120,' + (ba * 0.5).toFixed(3) + ')');
+          bGrad.addColorStop(1, 'rgba(191,168,128,0)');
+
+          ctx.beginPath();
+          ctx.arc(bp.x, bp.y, bp.r * (0.5 + bp.life * 0.5), 0, Math.PI * 2);
+          ctx.fillStyle = bGrad;
+          ctx.fill();
+        }
+        if (burstParticles.length === 0) burstActive = false;
+      }
+
       requestAnimationFrame(drawParticles);
     }
     requestAnimationFrame(drawParticles);
+
+    // Spawn burst particles from center
+    function spawnBurst(count) {
+      var cx = canvas.width / 2;
+      var cy = canvas.height / 2;
+      burstActive = true;
+      for (var i = 0; i < count; i++) {
+        var angle = (Math.PI * 2 * i / count) + (Math.random() - 0.5) * 0.5;
+        var speed = 2 + Math.random() * 5;
+        burstParticles.push({
+          x: cx + (Math.random() - 0.5) * 20,
+          y: cy + (Math.random() - 0.5) * 20,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.5,
+          r: 2 + Math.random() * 4,
+          alpha: 0.6 + Math.random() * 0.4,
+          life: 0.7 + Math.random() * 0.3
+        });
+      }
+    }
 
     // ============================
     // PHASE 1: CINEMATIC ENTRANCE
     // ============================
     var envelope = document.getElementById('intro-envelope');
 
-    // Initial states — everything hidden
-    gsap.set(envelope, { opacity: 0 });
-    gsap.set(seal, { opacity: 0, y: 10 });
-    gsap.set(sealGlow, { opacity: 0, scale: 0.6 });
-    gsap.set(tap, { opacity: 0, y: 8 });
+    // Initial states
+    gsap.set(envelope, { opacity: 0, scale: 1.04 });
+    gsap.set(seal, { opacity: 0, scale: 0.7, y: 15 });
+    gsap.set(sealImg, { filter: 'drop-shadow(0 6px 20px rgba(0,0,0,0.6)) brightness(0.8)' });
+    gsap.set(sealGlow, { opacity: 0, scale: 0.5 });
+    gsap.set(sealRing, { opacity: 0, scale: 0.8 });
+    gsap.set(tap, { opacity: 0, y: 12 });
+    gsap.set(glow2, { scale: 0, opacity: 0 });
 
     var entranceDone = false;
     var entranceTL = gsap.timeline({
-      delay: 0.6,
+      delay: 0.4,
       onComplete: function () { entranceDone = true; }
     });
 
     entranceTL
-      // Dust + envelope appear together
-      .to(particleAlpha, { value: 1, duration: 1.5, ease: 'power1.inOut' }, 0)
-      .to(envelope, { opacity: 1, duration: 1.5, ease: 'power1.inOut' }, 0)
+      // Ambient particles fade in slowly
+      .to(particleAlpha, { value: 0.5, duration: 2, ease: 'power1.inOut' }, 0)
 
-      // Seal fades in
-      .to(seal, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, 1.0)
-      .to(sealGlow, { opacity: 0.7, scale: 1, duration: 1, ease: 'power1.inOut' }, 1.2)
+      // Envelope materializes with subtle scale
+      .to(envelope, { opacity: 1, scale: 1, duration: 2.2, ease: 'power2.out' }, 0.3)
 
-      // Text appears
-      .to(tap, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 1.8);
+      // Particles intensify
+      .to(particleAlpha, { value: 1, duration: 1.5, ease: 'power1.inOut' }, 1.5)
 
-    // Seal glow breathes
+      // Seal drops in with spring
+      .to(seal, {
+        opacity: 1, scale: 1, y: 0, duration: 1.4,
+        ease: 'elastic.out(1, 0.6)'
+      }, 1.8)
+
+      // Seal glow + ring expand
+      .to(sealGlow, { opacity: 0.8, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.0)
+      .to(sealRing, { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' }, 2.1)
+
+      // Seal illuminates
+      .to(sealImg, {
+        filter: 'drop-shadow(0 4px 30px rgba(191,168,128,0.5)) brightness(1.1)',
+        duration: 1.2, ease: 'power1.inOut'
+      }, 2.2)
+
+      // Subtle inner glow reveals
+      .to(glow2, { scale: 0.6, opacity: 0.4, duration: 1.5, ease: 'power1.out' }, 2.5)
+
+      // Tap text slides up
+      .to(tap, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 3.0);
+
+    // Breathing loops
     var sealPulse = gsap.to(sealGlow, {
-      scale: 1.25, opacity: 0.35, duration: 2.5,
-      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 2.8
+      scale: 1.35, opacity: 0.3, duration: 3,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.2
     });
 
-    // Tap text breathe
+    var ringPulse = gsap.to(sealRing, {
+      scale: 1.15, opacity: 0.15, duration: 3,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.5
+    });
+
+    var sealFloat = gsap.to(seal, {
+      y: -4, duration: 2.5,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.2
+    });
+
     var tapPulse = gsap.to(tap, {
-      opacity: 0.7, duration: 2.5, ease: 'sine.inOut',
-      repeat: -1, yoyo: true, delay: 3.5
+      opacity: 0.55, duration: 2.8, ease: 'sine.inOut',
+      repeat: -1, yoyo: true, delay: 4.5
+    });
+
+    var glow2Pulse = gsap.to(glow2, {
+      scale: 0.7, opacity: 0.25, duration: 3.5,
+      ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 4.5
     });
 
     // ============================
-    // CLICK — CINEMATIC OPEN & TRANSITION
+    // CLICK — DRAMATIC SEAL BREAK + CINEMATIC OPEN
     // ============================
     var phase = 0;
 
@@ -271,42 +363,87 @@
       if (phase !== 0 || !entranceDone) return;
       phase = 1;
 
-      // Kill all looping tweens cleanly
+      // Kill all breathing
       sealPulse.kill();
+      ringPulse.kill();
+      sealFloat.kill();
       tapPulse.kill();
+      glow2Pulse.kill();
       gsap.killTweensOf(tap);
       gsap.killTweensOf(seal);
       gsap.killTweensOf(sealGlow);
+      gsap.killTweensOf(sealRing);
+      gsap.killTweensOf(glow2);
 
       var openTL = gsap.timeline();
 
       openTL
-        // Tap + seal fade together
-        .to(tap, { opacity: 0, duration: 0.3 }, 0)
-        .to(sealGlow, { scale: 2, opacity: 0, duration: 1, ease: 'power1.out' }, 0)
-        .to(seal, { opacity: 0, y: -6, duration: 0.8, ease: 'power2.inOut' }, 0.1)
+        // === BEAT 1: Seal cracks (0 - 0.6s) ===
+        // Quick dramatic zoom + shake on seal
+        .to(tap, { opacity: 0, y: 10, duration: 0.25, ease: 'power2.in' }, 0)
+        .to(seal, {
+          scale: 1.3, duration: 0.15, ease: 'power4.in',
+          onComplete: function () { spawnBurst(50); }
+        }, 0)
+        .to(seal, { scale: 1.15, duration: 0.1, ease: 'power2.out' }, 0.15)
+        // Seal shatters with rotation + fly up
+        .to(sealImg, {
+          filter: 'drop-shadow(0 0 40px rgba(255,220,150,0.9)) brightness(2)',
+          duration: 0.3, ease: 'power2.in'
+        }, 0.1)
+        .to(sealGlow, { scale: 3, opacity: 0.9, duration: 0.5, ease: 'power2.out' }, 0.15)
+        .to(sealRing, { scale: 2.5, opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.15)
+        .to(seal, {
+          scale: 0.3, opacity: 0, rotation: 15, y: -80,
+          duration: 0.7, ease: 'power3.in'
+        }, 0.3)
 
-        // Flaps part + golden glow emerges
-        .to(glow, { scale: 1, opacity: 0.6, duration: 1.4, ease: 'power1.out' }, 0.7)
-        .to(flapLeft, { x: '-105%', duration: 1.6, ease: 'power2.inOut' }, 0.7)
-        .to(flapRight, { x: '105%', duration: 1.6, ease: 'power2.inOut' }, 0.75)
+        // === BEAT 2: Golden light erupts (0.5 - 1.5s) ===
+        .to(glow, { scale: 0.8, opacity: 0.8, duration: 0.8, ease: 'power2.out' }, 0.5)
+        .to(glow2, { scale: 1.2, opacity: 0.7, duration: 0.8, ease: 'power2.out' }, 0.6)
+        .to(sealGlow, { scale: 5, opacity: 0, duration: 1, ease: 'power1.out' }, 0.7)
 
-        // Particles swell then dissolve
-        .to(particleAlpha, { value: 1.3, duration: 0.6, ease: 'power1.in' }, 1.0)
-        .to(particleAlpha, { value: 0, duration: 0.7, ease: 'power1.in' }, 1.6)
-        .to(glow, { scale: 2, opacity: 0, duration: 0.8, ease: 'power1.in' }, 1.8)
+        // === BEAT 3: Flaps open with 3D rotation (0.8 - 2.5s) ===
+        .to(flapLeft, {
+          rotationY: 120, x: '-30%',
+          duration: 1.8, ease: 'power3.inOut'
+        }, 0.8)
+        .to(flapRight, {
+          rotationY: -120, x: '30%',
+          duration: 1.8, ease: 'power3.inOut'
+        }, 0.85)
 
-        // Fade to cream
-        .to(flash, { opacity: 1, duration: 0.8, ease: 'power1.inOut' }, 2.0)
+        // Flaps slide out fully
+        .to(flapLeft, {
+          x: '-110%', opacity: 0,
+          duration: 0.8, ease: 'power2.in'
+        }, 2.2)
+        .to(flapRight, {
+          x: '110%', opacity: 0,
+          duration: 0.8, ease: 'power2.in'
+        }, 2.25)
 
-        // Remove intro and reveal the page
+        // === BEAT 4: Light swells + particles dissolve (1.5 - 3s) ===
+        .to(glow, { scale: 1.5, opacity: 1, duration: 1, ease: 'power1.out' }, 1.5)
+        .to(glow2, { scale: 2, opacity: 0.5, duration: 1, ease: 'power1.out' }, 1.6)
+        .to(particleAlpha, { value: 1.5, duration: 0.6, ease: 'power1.in' }, 1.5)
+        .to(particleAlpha, { value: 0, duration: 1, ease: 'power2.in' }, 2.2)
+
+        // Glows expand and dissolve
+        .to(glow, { scale: 3, opacity: 0, duration: 1.2, ease: 'power1.in' }, 2.5)
+        .to(glow2, { scale: 3, opacity: 0, duration: 1, ease: 'power1.in' }, 2.6)
+
+        // === BEAT 5: White flash reveal (2.8 - 3.6s) ===
+        .to(flash, { opacity: 1, duration: 1, ease: 'power2.inOut' }, 2.8)
+
+        // Cleanup
         .add(function () {
           particleRunning = false;
           window.removeEventListener('resize', resizeCanvas);
           intro.remove();
           document.documentElement.classList.remove('intro-active');
           if (revealHero) revealHero();
-        }, 2.8);
+        }, 3.8);
     });
   }
 

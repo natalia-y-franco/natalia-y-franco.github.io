@@ -1361,7 +1361,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
   top: 0; right: 0; bottom: 0; left: 0;
   z-index: 9999;
   overflow: hidden;
-  background: #120e08;
+  background: radial-gradient(ellipse at 50% 40%, #1a1510 0%, #120e08 40%, #0a0806 100%);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1375,6 +1375,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
   height: 100%;
   z-index: 1;
   pointer-events: none;
+  will-change: contents;
 }
 
 /* --- Central glow (reveals behind envelope) --- */
@@ -1387,12 +1388,30 @@ html.intro-active body { overflow: hidden; height: 100%; }
   transform: translate(-50%, -50%) scale(0);
   background: radial-gradient(
     circle,
-    rgba(191,168,128,0.22) 0%,
-    rgba(191,168,128,0.08) 25%,
-    rgba(140,120,80,0.03) 45%,
-    transparent 65%
+    rgba(191,168,128,0.28) 0%,
+    rgba(191,168,128,0.12) 20%,
+    rgba(140,120,80,0.04) 40%,
+    transparent 60%
   );
   z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.intro__glow2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80vmax;
+  height: 80vmax;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(
+    circle,
+    rgba(255,240,210,0.15) 0%,
+    rgba(191,168,128,0.06) 30%,
+    transparent 55%
+  );
+  z-index: 3;
   pointer-events: none;
   opacity: 0;
 }
@@ -1402,6 +1421,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
   z-index: 10;
+  -webkit-perspective: 1800px;
   perspective: 1800px;
   opacity: 0;
 }
@@ -1411,11 +1431,16 @@ html.intro-active body { overflow: hidden; height: 100%; }
   top: 0;
   height: 100%;
   overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 .intro__flap--left {
   left: 0;
   width: 65%;
+  -webkit-transform-origin: 0% 50%;
   transform-origin: 0% 50%;
   z-index: 2;
 }
@@ -1423,6 +1448,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
 .intro__flap--right {
   right: 0;
   width: 65%;
+  -webkit-transform-origin: 100% 50%;
   transform-origin: 100% 50%;
   z-index: 1;
 }
@@ -1460,25 +1486,51 @@ html.intro-active body { overflow: hidden; height: 100%; }
   display: block;
   position: relative;
   z-index: 2;
+  -webkit-filter: drop-shadow(0 6px 20px rgba(0,0,0,0.6));
   filter: drop-shadow(0 6px 20px rgba(0,0,0,0.6));
+  will-change: transform, filter;
 }
 
 .intro__seal-glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 250%;
-  height: 250%;
+  width: 300%;
+  height: 300%;
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
-    rgba(191,168,128,0.4) 0%,
-    rgba(191,168,128,0.12) 35%,
-    transparent 65%
+    rgba(220,195,150,0.45) 0%,
+    rgba(191,168,128,0.15) 30%,
+    transparent 60%
   );
   z-index: 1;
   pointer-events: none;
   opacity: 0;
+}
+
+.intro__seal-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 130%;
+  height: 130%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(191,168,128,0.3);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.intro__sparks {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 25;
+  pointer-events: none;
 }
 
 /* --- Tap prompt --- */
