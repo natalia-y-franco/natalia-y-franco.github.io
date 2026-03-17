@@ -126,8 +126,10 @@
         }, 1.0);
     };
 
-    // If no intro, reveal hero immediately
+    // If no intro, remove dog video overlay and reveal hero immediately
     if (!document.getElementById('intro')) {
+      var dogOverlay = document.getElementById('dog-video');
+      if (dogOverlay) dogOverlay.remove();
       revealHero();
     }
 
@@ -630,9 +632,71 @@
           window.removeEventListener('resize', resizeCanvas);
           intro.remove();
           document.documentElement.classList.remove('intro-active');
-          if (revealHero) revealHero();
+          showDogVideo();
         }, 5.2);
     });
+  }
+
+  // ============================
+  // DOG VIDEO INTERLUDE
+  // ============================
+  function showDogVideo() {
+    var overlay = document.getElementById('dog-video');
+    var frame = overlay && overlay.querySelector('.dog-video__frame');
+    var video = document.getElementById('dog-video-player');
+
+    if (!overlay || !video) {
+      if (revealHero) revealHero();
+      return;
+    }
+
+    // Show overlay
+    gsap.set(overlay, { opacity: 1, pointerEvents: 'auto' });
+
+    // Animate frame in
+    var tl = gsap.timeline();
+
+    tl
+      .to(frame, {
+        opacity: 1, scale: 1, duration: 1.2,
+        ease: 'power2.out'
+      }, 0.3)
+      .add(function () {
+        video.play().catch(function () {});
+      }, 0.5);
+
+    // When video ends, fade out and reveal hero
+    video.addEventListener('ended', function () {
+      var outTL = gsap.timeline();
+      outTL
+        .to(frame, {
+          opacity: 0, scale: 0.92, duration: 1,
+          ease: 'power2.inOut'
+        }, 0)
+        .to(overlay, {
+          opacity: 0, duration: 0.8,
+          ease: 'power2.inOut'
+        }, 0.5)
+        .add(function () {
+          overlay.remove();
+          if (revealHero) revealHero();
+        }, 1.3);
+    });
+
+    // Fallback: if video doesn't play or takes too long, skip after 8s
+    setTimeout(function () {
+      if (overlay.parentNode) {
+        video.pause();
+        var outTL = gsap.timeline();
+        outTL
+          .to(frame, { opacity: 0, scale: 0.92, duration: 0.8, ease: 'power2.inOut' }, 0)
+          .to(overlay, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 0.3)
+          .add(function () {
+            overlay.remove();
+            if (revealHero) revealHero();
+          }, 0.9);
+      }
+    }, 8000);
   }
 
   // ============================
@@ -753,6 +817,8 @@
   function skipIntro() {
     var intro = document.getElementById('intro');
     if (intro) intro.remove();
+    var dogOverlay = document.getElementById('dog-video');
+    if (dogOverlay) dogOverlay.remove();
     document.documentElement.classList.remove('intro-active');
     if (revealHero) revealHero();
   }
