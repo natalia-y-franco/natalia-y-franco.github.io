@@ -545,15 +545,30 @@
   function init() {
     container = createMascotDOM();
 
-    // Entrance
+    // Entrance — wait for dog video to finish if present, otherwise animate in
+    var dogVideo = document.getElementById('dog-video-player');
     if (typeof gsap !== 'undefined') {
-      gsap.set(container, { y: 60, opacity: 0, scale: 0.5 });
-      gsap.to(container, {
-        y: 0, opacity: 1, scale: 1,
-        duration: 0.8,
-        ease: 'back.out(1.8)',
-        delay: 0.3
-      });
+      gsap.set(container, { y: 60, opacity: 0, scale: 0.5, visibility: 'hidden' });
+      if (!dogVideo) {
+        // No dog video, just animate in normally
+        gsap.to(container, {
+          y: 0, opacity: 1, scale: 1, visibility: 'visible',
+          duration: 0.8,
+          ease: 'back.out(1.8)',
+          delay: 0.3
+        });
+      } else {
+        // Dog video exists — script.js will call gsap.to('.mascota', ...) when video ends
+        // Listen for the video end as backup
+        dogVideo.addEventListener('ended', function () {
+          gsap.to(container, {
+            y: 0, opacity: 1, scale: 1, visibility: 'visible',
+            duration: 1,
+            ease: 'back.out(1.5)',
+            delay: 0.6
+          });
+        });
+      }
     } else {
       container.style.opacity = '1';
     }
