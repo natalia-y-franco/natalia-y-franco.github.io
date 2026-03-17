@@ -58,7 +58,7 @@
     gsap.set('.hero__line-bottom', { scaleX: 0 });
     gsap.set('.hero__espiga--left', { opacity: 0, x: -60, rotation: -12, scale: 0.85 });
     gsap.set('.hero__espiga--right', { opacity: 0, x: 60, rotation: 12, scale: 0.85 });
-    gsap.set('.dog-intro', { opacity: 0, scale: 0.8 });
+    gsap.set('.dog-intro', { opacity: 0 });
 
     // --- Initial hidden states: Countdown ---
     gsap.set('.countdown__bubble', { opacity: 0, y: 40, scale: 0.85 });
@@ -126,19 +126,15 @@
           duration: 2, ease: 'power2.out'
         }, 1.0)
 
-        // Dog video fades in naturally in the hero
-        .to('.dog-intro', {
-          opacity: 1, scale: 1, duration: 1.6,
-          ease: 'power2.out'
-        }, 1.8)
+        // Dog video — start playing first, then fade in so it's already running
         .add(function () {
           var dogVideo = document.getElementById('dog-video-player');
           if (!dogVideo) return;
           dogVideo.play().catch(function () {});
-          // When video ends, fade out dog and show mascota bubble
+          // When video ends, fade out and show mascota bubble
           dogVideo.addEventListener('ended', function () {
             gsap.to('.dog-intro', {
-              opacity: 0, scale: 0.85, duration: 1.2,
+              opacity: 0, duration: 1.2,
               ease: 'power2.inOut',
               onComplete: function () {
                 var el = document.getElementById('hero-dog');
@@ -150,7 +146,11 @@
               ease: 'back.out(1.5)', delay: 0.6
             });
           });
-        }, 2.0);
+        }, 1.6)
+        .to('.dog-intro', {
+          opacity: 1, duration: 1.2,
+          ease: 'power2.out'
+        }, 1.8);
     };
 
     // If no intro, reveal hero immediately

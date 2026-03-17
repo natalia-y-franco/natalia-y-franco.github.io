@@ -204,16 +204,18 @@ img {
   top: 20px;
 }
 
-/* --- Dog video intro (inside hero overlay, above date) --- */
+/* --- Dog video intro (absolute, above date, no layout shift) --- */
 .dog-intro {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: clamp(40px, 12vh, 100px);
   width: 90px;
   height: 90px;
-  min-height: 90px;
   border-radius: 50%;
   overflow: hidden;
   opacity: 0;
-  margin-bottom: 12px;
-  flex-shrink: 0;
+  pointer-events: none;
 }
 
 .dog-intro__video {
@@ -227,7 +229,6 @@ img {
   .dog-intro {
     width: 100px;
     height: 100px;
-    min-height: 100px;
   }
 }
 
