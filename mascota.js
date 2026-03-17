@@ -547,6 +547,11 @@
 
     // Entrance — wait for dog video to finish if present, otherwise animate in
     var dogVideo = document.getElementById('dog-video-player');
+    function greetOnVisible() {
+      setTimeout(function () {
+        showBubble('¡Bienvenidos a la boda! 🐾');
+      }, 600);
+    }
     if (typeof gsap !== 'undefined') {
       gsap.set(container, { y: 60, opacity: 0, scale: 0.5, visibility: 'hidden' });
       if (!dogVideo) {
@@ -555,7 +560,8 @@
           y: 0, opacity: 1, scale: 1, visibility: 'visible',
           duration: 0.8,
           ease: 'back.out(1.8)',
-          delay: 0.3
+          delay: 0.3,
+          onComplete: greetOnVisible
         });
       } else {
         // Dog video exists — script.js will call gsap.to('.mascota', ...) when video ends
@@ -565,7 +571,8 @@
             y: 0, opacity: 1, scale: 1, visibility: 'visible',
             duration: 1,
             ease: 'back.out(1.5)',
-            delay: 0.6
+            delay: 0.6,
+            onComplete: greetOnVisible
           });
         });
       }
@@ -578,11 +585,6 @@
       e.stopPropagation();
       onTap();
     });
-
-    // First greeting
-    setTimeout(function () {
-      showBubble('¡Bienvenidos a la boda! 🐾');
-    }, 1800);
 
     // Start systems
     setTimeout(startAutoTalk, 6000);

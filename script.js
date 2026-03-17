@@ -61,9 +61,13 @@
     gsap.set('.dog-intro', { opacity: 0 });
 
     // --- Initial hidden states: Countdown ---
-    gsap.set('.countdown__bubble', { opacity: 0, y: 40, scale: 0.85 });
-    gsap.set('.countdown__vector', { opacity: 0, scale: 0.8 });
-    gsap.set('.countdown__wave', { opacity: 0, y: 20 });
+    gsap.set('.countdown__bubble', { opacity: 0, y: 60, scale: 0.7 });
+    gsap.set('.countdown__title', { opacity: 0, y: 20 });
+    gsap.set('.countdown__number', { opacity: 0, y: 30, scale: 0.5 });
+    gsap.set('.countdown__label', { opacity: 0, y: 10 });
+    gsap.set('.countdown__separator', { opacity: 0, scaleY: 0 });
+    gsap.set('.countdown__vector', { opacity: 0, scale: 0.6, rotation: -15 });
+    gsap.set('.countdown__wave', { opacity: 0, y: 30 });
 
     // --- Initial hidden states: Message ---
     gsap.set('.message__text', { opacity: 0, y: 30, filter: 'blur(6px)' });
@@ -189,12 +193,34 @@
         el: '.countdown',
         anim: function () {
           gsap.timeline()
-            .to('.countdown__wave', { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power2.out' }, 0)
-            .to('.countdown__vector', { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' }, 0.1)
+            // Waves drift in softly
+            .to('.countdown__wave', { opacity: 1, y: 0, duration: 1.4, stagger: 0.2, ease: 'power2.out' }, 0)
+            // Decorative vector floats in with rotation
+            .to('.countdown__vector', { opacity: 1, scale: 1, rotation: 0, duration: 1.6, ease: 'power3.out' }, 0.2)
+            // Bubble rises and scales elegantly
             .to('.countdown__bubble', {
               opacity: 1, y: 0, scale: 1,
-              duration: 1.4, ease: 'elastic.out(1, 0.7)'
-            }, 0.2);
+              duration: 1.6, ease: 'power4.out'
+            }, 0.3)
+            // "Faltan" title fades in
+            .to('.countdown__title', {
+              opacity: 1, y: 0, duration: 1, ease: 'power3.out'
+            }, 0.8)
+            // Numbers count up with stagger
+            .to('.countdown__number', {
+              opacity: 1, y: 0, scale: 1,
+              duration: 0.8, stagger: 0.15, ease: 'back.out(2)'
+            }, 1.0)
+            // Separators draw in
+            .to('.countdown__separator', {
+              opacity: 1, scaleY: 1,
+              duration: 0.6, stagger: 0.1, ease: 'power2.out'
+            }, 1.2)
+            // Labels fade in
+            .to('.countdown__label', {
+              opacity: 1, y: 0,
+              duration: 0.6, stagger: 0.1, ease: 'power2.out'
+            }, 1.3);
         }
       },
       {
