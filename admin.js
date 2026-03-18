@@ -212,7 +212,8 @@
     document.getElementById('stat-personas').textContent = stats.totalPersonas;
     document.getElementById('stat-personas-confirmadas').textContent = stats.personasConfirmadas || 0;
     document.getElementById('stat-confirmados').textContent = stats.confirmados;
-    document.getElementById('stat-pendientes').textContent = stats.pendientes;
+    var elPendientes = document.getElementById('stat-pendientes');
+    if (elPendientes) elPendientes.textContent = stats.pendientes;
     document.getElementById('stat-declinados').textContent = stats.declinados;
     document.getElementById('stat-personas-declinadas').textContent = stats.personasDeclinadas || 0;
     document.getElementById('stat-alergias').textContent = stats.conAlergias;
