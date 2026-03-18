@@ -1599,6 +1599,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
 
 /* Pressed-into-fabric shadow: dark ring around the seal where wax meets burlap */
 .intro__seal-shadow {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
