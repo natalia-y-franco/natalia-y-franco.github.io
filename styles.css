@@ -1704,17 +1704,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
 }
 
 .intro__seal-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 130%;
-  height: 130%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 1px solid rgba(191,168,128,0.3);
-  z-index: 5;
-  pointer-events: none;
-  opacity: 0;
+  display: none;
 }
 
 .intro__sparks {
