@@ -81,13 +81,13 @@
     gsap.set('.fecha__ceremonia, .fecha__capilla, .fecha__direccion, .fecha__direccion-detalle, .fecha__hora', { opacity: 0, y: 15 });
     gsap.set('.fecha__recepcion, .fecha__recepcion-venue', { opacity: 0, y: 15 });
     gsap.set('.fecha .btn, .fecha__status', { opacity: 0, y: 15 });
-    gsap.set('.fecha .icon-separater', { opacity: 0, scale: 0.5, rotation: -20 });
+    gsap.set('.fecha .icon-separater', { opacity: 0, y: 15, scale: 0.85 });
 
     // --- Initial hidden states: Fiesta ---
     gsap.set('.fiesta__title', { opacity: 0, y: 30, filter: 'blur(4px)' });
     gsap.set('.fiesta__wave', { opacity: 0, y: 30 });
     gsap.set('.fiesta__card', { opacity: 0, y: 50, scale: 0.95 });
-    gsap.set('.fiesta__card-icon', { opacity: 0, scale: 0.3, rotation: -15 });
+    gsap.set('.fiesta__card-icon', { opacity: 0, y: 15, scale: 0.85 });
     gsap.set('.fiesta__card-heading', { opacity: 0, y: 15 });
     gsap.set('.fiesta__card-text', { opacity: 0, y: 10 });
     gsap.set('.fiesta__qr', { opacity: 0, scale: 0.8 });
@@ -249,7 +249,7 @@
 
             // Ceremonia section cascades
             .to('.fecha__ceremonia', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.5)
-            .to('.fecha .icon-separater', { opacity: 1, scale: 1, rotation: 0, duration: 0.8, stagger: 0.3, ease: 'back.out(1.7)' }, 0.55)
+            .to('.fecha .icon-separater', { opacity: 1, y: 0, scale: 1, duration: 1, stagger: 0.3, ease: 'power2.out' }, 0.55)
             .to('.fecha__capilla', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.6)
             .to('.fecha__direccion', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.7)
             .to('.fecha__direccion-detalle', { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, 0.8)
@@ -280,10 +280,10 @@
               opacity: 1, y: 0, scale: 1,
               duration: 1.2, stagger: 0.3, ease: 'power3.out'
             }, 0.5)
-            // Card icons pop in with bounce
+            // Card icons fade in elegantly
             .to('.fiesta__card-icon', {
-              opacity: 1, scale: 1, rotation: 0,
-              duration: 0.8, stagger: 0.2, ease: 'back.out(1.7)'
+              opacity: 1, y: 0, scale: 1,
+              duration: 1, stagger: 0.2, ease: 'power2.out'
             }, 0.8)
             // Card headings
             .to('.fiesta__card-heading', {
