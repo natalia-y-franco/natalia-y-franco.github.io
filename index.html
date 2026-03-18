@@ -149,15 +149,14 @@
           Te sugerimos llevar zapatos de recambio y una chaqueta abrigadora para la noche.</p>
       </div>
 
-      <!-- Música Card -->
+      <!-- Regalo Card -->
       <div class="fiesta__card">
         <h3 class="fiesta__card-heading">Regalo</h3>
         <img src="assets/regalo.png" alt="Regalo" class="fiesta__card-icon fiesta__card-icon--music">
         <p class="fiesta__card-text">El regalo más importante es tu presencia, pero si quieres hacernos un regalo.
           Ayúdanos a coronar este momento con nuestra Luna de Miel, nuestros hermoso sueño.
-       </p>
-
-
+        </p>
+        <button class="btn btn--link btn--link-regalo" id="btn-regalo">Ver datos para el regalo</button>
       </div>
       <!-- Música Card -->
       <div class="fiesta__card">
@@ -257,6 +256,27 @@
     <div class="fullscreen__bottom">
       <img src="assets/Vector.svg" alt="" class="fullscreen__vector-bottom" aria-hidden="true">
       <button class="fullscreen__close" id="btn-close-confirmar" aria-label="Cerrar">X</button>
+    </div>
+  </div>
+
+  <!-- ===== REGALO FULLSCREEN ===== -->
+  <div class="fullscreen" id="screen-regalo" aria-hidden="true">
+    <div class="fullscreen__content">
+      <img src="assets/Vector.svg" alt="" class="fullscreen__vector" aria-hidden="true">
+      <h2 class="fullscreen__title">Datos para<br>el regalo</h2>
+      <div class="regalo-datos">
+        <p class="regalo-datos__line">Nombre: Natalia Suarez Fierro</p>
+        <p class="regalo-datos__line">RUT: 15.119.055-3</p>
+        <p class="regalo-datos__line">Banco: Falabella</p>
+        <p class="regalo-datos__line">Tipo: Cuenta Vista</p>
+        <p class="regalo-datos__line">Número de cuenta: 50014435354</p>
+        <p class="regalo-datos__line">Email: nataliasuarezfierro@gmail.com</p>
+      </div>
+      <button class="btn btn--primary" id="btn-copiar-regalo">Copiar datos</button>
+    </div>
+    <div class="fullscreen__bottom">
+      <img src="assets/Vector.svg" alt="" class="fullscreen__vector-bottom" aria-hidden="true">
+      <button class="fullscreen__close" id="btn-close-regalo" aria-label="Cerrar">X</button>
     </div>
   </div>
 

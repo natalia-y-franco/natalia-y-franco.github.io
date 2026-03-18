@@ -49,8 +49,8 @@
     var heroLetters = document.querySelectorAll('.hero__letter');
 
     // --- Initial hidden states: Hero ---
-    gsap.set('.hero__photo', { opacity: 0, scale: 1.3 });
-    gsap.set('.hero__photo img', { scale: 1.5 });
+    gsap.set('.hero__photo', { opacity: 0, scale: 2.5 });
+    gsap.set('.hero__photo img', { scale: 1 });
     gsap.set('.hero__date-line', { scaleX: 0 });
     gsap.set('.hero__date-text', { opacity: 0, y: 15, filter: 'blur(6px)' });
     gsap.set('.hero__names', { opacity: 1, y: 0, scale: 1 });
@@ -61,6 +61,7 @@
     gsap.set('.dog-intro', { opacity: 0 });
 
     // --- Initial hidden states: Countdown ---
+    gsap.set('.countdown', { opacity: 0 });
     gsap.set('.countdown__bubble', { opacity: 0, y: 60, scale: 0.7 });
     gsap.set('.countdown__title', { opacity: 0, y: 20 });
     gsap.set('.countdown__number', { opacity: 0, y: 30, scale: 0.5 });
@@ -103,8 +104,8 @@
 
       tl
         // Photo breathes in with cinematic zoom-out
-        .to('.hero__photo', { opacity: 1, scale: 1, duration: 3, ease: 'power2.out' }, 0)
-        .to('.hero__photo img', { scale: 1, duration: 10, ease: 'power1.out' }, 0)
+        .to('.hero__photo', { opacity: 1, scale: 1, duration: 5, ease: 'power2.out' }, 0)
+        .to('.hero__photo img', { scale: 1, duration: 5, ease: 'power2.out' }, 0)
 
         // Date lines extend from center
         .to('.hero__date-line', { scaleX: 1, duration: 1.2, ease: 'expo.out' }, 0.6)
@@ -148,7 +149,6 @@
           var dogVideo = document.getElementById('dog-video-player');
           if (!dogVideo) return;
           dogVideo.play().catch(function () {});
-          // Fade out BEFORE the video ends so they finish together
           var fadeDuration = 1.5;
           var fadeStarted = false;
           dogVideo.addEventListener('timeupdate', function () {
@@ -170,7 +170,6 @@
               });
             }
           });
-          // Fallback in case timeupdate doesn't fire precisely
           dogVideo.addEventListener('ended', function () {
             if (!fadeStarted) {
               fadeStarted = true;
@@ -194,7 +193,8 @@
           ease: 'power2.out'
         }, 1.8)
 
-        // Countdown entrance — plays as hero settles
+        // Countdown entrance — start fading in early so white gap is never visible
+        .to('.countdown', { opacity: 1, duration: 3, ease: 'power1.in' }, 0.5)
         .to('.countdown__wave', { opacity: 1, y: 0, duration: 1.4, stagger: 0.2, ease: 'power2.out' }, 2.0)
         .to('.countdown__vector', { opacity: 1, scale: 1, rotation: 0, duration: 1.6, ease: 'power3.out' }, 2.2)
         .to('.countdown__bubble', {
@@ -940,6 +940,30 @@
     screen.classList.remove('is-open');
     screen.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
+  });
+
+  // Regalo screen
+  document.getElementById('btn-regalo').addEventListener('click', function () {
+    var screen = document.getElementById('screen-regalo');
+    screen.classList.add('is-open');
+    screen.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  });
+
+  document.getElementById('btn-close-regalo').addEventListener('click', function () {
+    var screen = document.getElementById('screen-regalo');
+    screen.classList.remove('is-open');
+    screen.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+  });
+
+  document.getElementById('btn-copiar-regalo').addEventListener('click', function () {
+    var datos = 'Nombre: Natalia Suarez Fierro\nRUT: 15.119.055-3\nBanco: Falabella\nTipo: Cuenta Vista\nNúmero de cuenta: 50014435354\nEmail: nataliasuarezfierro@gmail.com';
+    navigator.clipboard.writeText(datos).then(function () {
+      var btn = document.getElementById('btn-copiar-regalo');
+      btn.textContent = '¡Copiado!';
+      setTimeout(function () { btn.textContent = 'Copiar datos'; }, 2000);
+    });
   });
 
   document.getElementById('btn-mapa').addEventListener('click', function () {

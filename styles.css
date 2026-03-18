@@ -83,50 +83,41 @@ img {
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 600px;
-  max-height: 960px;
   overflow: visible;
   background: #fbf9fc;
 }
 
 .hero__photo {
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  position: relative;
   z-index: 1;
-  overflow: hidden;
-  padding-top: 100px;
+  padding-top: 220px;  /* cream "sky" extension above the image */
+  background: #fbf9fc;
 }
 
 .hero__photo::after {
   content: '';
   position: absolute;
   left: 0; right: 0; bottom: -1px;
-  height: 45%;
-  background: linear-gradient(to bottom, transparent 0%, rgba(250,248,245,0.35) 30%, rgba(250,248,245,0.75) 50%, rgba(250,248,245,0.95) 65%, #FAF8F5 80%);
+  height: 6px;
+  background: linear-gradient(to bottom, transparent, #FAF8F5);
   z-index: 1;
   pointer-events: none;
 }
 
 .hero__photo img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center 40%;
-  filter: none;
+  height: auto;
+  display: block;
 }
 
 .hero__overlay {
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0; left: 0; right: 0;
   z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: clamp(60px, 14vh, 100px);
-  overflow: visible;
+  padding-top: 170px;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
@@ -158,14 +149,14 @@ img {
 .hero__names {
   font-family: 'Waterfall', cursive;
   font-weight: 400;
-  font-size: clamp(90px, 36vw, 140px);
-  line-height: 1;
+  font-size: 140px;
+  line-height: 80px;
   letter-spacing: 0;
   text-align: center;
   color: #363636;
-  margin-top: -10px;
+  margin-top: -6px;
   max-width: 100%;
-  padding: 15px 12px 10px;
+  padding: 10px 12px 8px;
   overflow: visible;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
@@ -187,7 +178,7 @@ img {
   height: 1px;
   background: #BFA880;
   border-radius: 1px;
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .hero__espiga {
@@ -199,13 +190,13 @@ img {
 .hero__espiga--left {
   width: 175px;
   left: -10px;
-  bottom: 40px;
+  bottom: 120px;
 }
 
 .hero__espiga--right {
   width: 200px;
   right: -10px;
-  top: 20px;
+  top: 47px;
 }
 
 /* --- Dog video intro (absolute, above date, no layout shift) --- */
@@ -213,7 +204,7 @@ img {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: calc(clamp(60px, 14vh, 100px) - 98px);
+  top: calc(170px - 98px);
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -234,7 +225,7 @@ img {
   .dog-intro {
     width: 100px;
     height: 100px;
-    top: calc(clamp(60px, 14vh, 100px) - 108px);
+    top: calc(170px - 108px);
   }
 }
 
@@ -250,7 +241,7 @@ img {
 }
 
 .countdown__wave--back {
-  top: -20px;
+  top: -30px;
   z-index: 2;
 }
 
@@ -307,7 +298,7 @@ img {
   text-align: center;
   display: flex;
   justify-content: center;
-  margin-top: clamp(-260px, -28vh, -100px);
+  margin-top: -50px;
   margin-bottom: 20px;
 }
 
@@ -714,6 +705,37 @@ img {
 
 .btn--link:hover {
   color: var(--gold-dark);
+}
+
+.btn--link-regalo {
+  margin-top: 16px;
+}
+
+/* --- Regalo datos --- */
+.regalo-datos {
+  text-align: left;
+  margin: 24px 0 32px;
+}
+
+.regalo-datos__line {
+  font-family: 'SF Pro Rounded', var(--font-body);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 32px;
+  letter-spacing: 0;
+  color: #363636;
+}
+
+#btn-copiar-regalo {
+  font-family: 'SF Pro Rounded', var(--font-body);
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  background: #BFA880;
+  color: #FFFFFF;
+  box-shadow: 0px 8px 8px 0px #0000002E;
 }
 
 .btn--link-gold {
@@ -1847,7 +1869,11 @@ html.intro-active body { overflow: hidden; height: 100%; }
    ======================================== */
 @media (max-width: 374px) {
   .hero__overlay {
-    padding-top: clamp(50px, 12vh, 90px);
+    padding-top: 140px;
+  }
+
+  .hero__photo {
+    padding-top: 140px;
   }
 
   .countdown__bubble {
@@ -1937,11 +1963,6 @@ html.intro-active body { overflow: hidden; height: 100%; }
    RESPONSIVE — TABLET & DESKTOP
    ======================================== */
 @media (min-width: 768px) {
-  .hero {
-    height: 80vh;
-    max-height: 800px;
-  }
-
   .hero__names {
     max-width: 400px;
   }
@@ -2008,7 +2029,6 @@ html.intro-active body { overflow: hidden; height: 100%; }
 
   .hero {
     border-radius: 0 0 24px 24px;
-    max-height: 700px;
   }
 }
 
@@ -2054,7 +2074,8 @@ body.modal-open {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center 15%;
   pointer-events: none;
   border-radius: 50%;
 }

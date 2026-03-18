@@ -94,7 +94,7 @@
       '<div class="mascota__hearts" id="mascota-hearts"></div>' +
       '<div class="mascota__zzz" id="mascota-zzz">Z</div>' +
       '<div class="mascota__circle">' +
-        '<img class="mascota__img" src="assets/yorkshire.svg" alt="Yorkito" draggable="false">' +
+        '<img class="mascota__img" src="assets/perro-yorkshire.png" alt="Yorkito" draggable="false">' +
       '</div>';
 
     document.body.appendChild(el);
