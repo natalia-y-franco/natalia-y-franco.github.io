@@ -125,7 +125,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: clamp(60px, 14vh, 130px);
+  padding-top: clamp(60px, 14vh, 100px);
   
 }
 
@@ -206,7 +206,7 @@ img {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: calc(clamp(60px, 14vh, 130px) - 98px);
+  top: calc(clamp(60px, 14vh, 100px) - 98px);
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -227,7 +227,7 @@ img {
   .dog-intro {
     width: 100px;
     height: 100px;
-    top: calc(clamp(60px, 14vh, 130px) - 108px);
+    top: calc(clamp(60px, 14vh, 100px) - 108px);
   }
 }
 
