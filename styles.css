@@ -88,7 +88,7 @@ img {
   min-height: 600px;
   max-height: 960px;
   overflow: visible;
-  background: #FAF8F5;
+  background: #fbf9fc;
 }
 
 .hero__photo {
@@ -126,7 +126,9 @@ img {
   align-items: center;
   justify-content: flex-start;
   padding-top: clamp(60px, 14vh, 100px);
-  
+  overflow: visible;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .hero__date {
@@ -157,14 +159,16 @@ img {
   font-family: 'Waterfall', cursive;
   font-weight: 400;
   font-size: clamp(90px, 36vw, 140px);
-  line-height: 0.85;
+  line-height: 1;
   letter-spacing: 0;
   text-align: center;
   color: #363636;
   margin-top: -10px;
   max-width: 100%;
-  padding: 10px 8px 0;
+  padding: 15px 12px 10px;
   overflow: visible;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .hero__letter {
@@ -2308,9 +2312,18 @@ body.modal-open {
 .dresscode {
   width: 90px;
 }
+.icon-separater {
+  width: 50px;
+  height: auto;
+  margin: 10px auto;
+  display: block;
+}
 .foto-footer {
-  margin-top: 50px;
+  width: 100%;
+  max-width: 400px;
+  margin: 50px auto 0;
+  display: block;
   filter: sepia(.6);
-    border-radius: 6px;
-    border: 2.5px solid #BFA880;
+  border-radius: 6px;
+  border: 2.5px solid #BFA880;
 }
