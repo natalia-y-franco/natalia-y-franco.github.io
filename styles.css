@@ -1487,46 +1487,28 @@ html.intro-active body { overflow: hidden; height: 100%; }
   pointer-events: none;
 }
 
-/* Left fragments (0,1,2) show left image */
-.intro__fragment[data-frag="0"] img,
-.intro__fragment[data-frag="1"] img,
-.intro__fragment[data-frag="2"] img {
+/* Left half — shows left image */
+.intro__fragment[data-frag="0"] img {
   left: 0;
   object-position: right center;
 }
 
-/* Right fragments (3,4,5) show right image */
-.intro__fragment[data-frag="3"] img,
-.intro__fragment[data-frag="4"] img,
-.intro__fragment[data-frag="5"] img {
+/* Right half — shows right image */
+.intro__fragment[data-frag="1"] img {
   right: 0;
   object-position: left center;
 }
 
-/* Initial clip-paths: irregular tears from center */
+/* Envelope halves: left and right */
 .intro__fragment[data-frag="0"] {
-  -webkit-clip-path: polygon(0 0, 52% 0, 48% 35%, 53% 50%, 0 50%);
-  clip-path: polygon(0 0, 52% 0, 48% 35%, 53% 50%, 0 50%);
+  -webkit-clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+  transform-origin: left center;
 }
 .intro__fragment[data-frag="1"] {
-  -webkit-clip-path: polygon(0 50%, 53% 50%, 50% 65%, 55% 80%, 0 100%);
-  clip-path: polygon(0 50%, 53% 50%, 50% 65%, 55% 80%, 0 100%);
-}
-.intro__fragment[data-frag="2"] {
-  -webkit-clip-path: polygon(0 100%, 55% 80%, 52% 100%);
-  clip-path: polygon(0 100%, 55% 80%, 52% 100%);
-}
-.intro__fragment[data-frag="3"] {
-  -webkit-clip-path: polygon(52% 0, 100% 0, 100% 50%, 47% 50%, 48% 35%);
-  clip-path: polygon(52% 0, 100% 0, 100% 50%, 47% 50%, 48% 35%);
-}
-.intro__fragment[data-frag="4"] {
-  -webkit-clip-path: polygon(47% 50%, 100% 50%, 100% 80%, 45% 80%, 50% 65%);
-  clip-path: polygon(47% 50%, 100% 50%, 100% 80%, 45% 80%, 50% 65%);
-}
-.intro__fragment[data-frag="5"] {
-  -webkit-clip-path: polygon(45% 80%, 100% 80%, 100% 100%, 48% 100%);
-  clip-path: polygon(45% 80%, 100% 80%, 100% 100%, 48% 100%);
+  -webkit-clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  transform-origin: right center;
 }
 
 /* --- Wax seal --- */

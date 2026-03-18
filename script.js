@@ -645,17 +645,7 @@
     // ============================
     var phase = 0;
 
-    // Each fragment drifts apart gracefully — slow, gentle separation
-    var fragPhysics = [
-      // Left fragments: drift left with gentle rotation
-      { x: '-65%', y: '-12%', rotation: -8,  delay: 0.3 },
-      { x: '-55%', y: '8%',   rotation: -5,  delay: 0.5 },
-      { x: '-50%', y: '22%',  rotation: -10, delay: 0.4 },
-      // Right fragments: drift right
-      { x: '65%',  y: '-10%', rotation: 6,   delay: 0.35 },
-      { x: '55%',  y: '10%',  rotation: 8,   delay: 0.45 },
-      { x: '60%',  y: '20%',  rotation: 5,   delay: 0.55 }
-    ];
+    // Envelope opening — two halves slide apart
 
     intro.addEventListener('click', function () {
       if (phase !== 0 || !entranceDone) return;
@@ -692,7 +682,6 @@
         // Spawn just a few delicate particles
         .add(function () {
           spawnBurst(20);
-          spawnFibers(12);
         }, 0.6)
 
         // === BEAT 2: Seal fades gracefully (1.0 - 2.8s) ===
@@ -706,24 +695,17 @@
         // Glow expands gently as seal releases
         .to(sealGlow, { scale: 3.5, opacity: 0, duration: 2, ease: 'power1.out' }, 1.2)
 
-        // === BEAT 3: Fragments drift apart slowly (1.4 - 3.5s) ===
-        .add(function () {
-          fragments.forEach(function (frag, idx) {
-            var phys = fragPhysics[idx];
-            gsap.to(frag, {
-              x: phys.x,
-              y: phys.y,
-              rotation: phys.rotation,
-              opacity: 0,
-              duration: 2.5 + Math.random() * 0.5,
-              delay: phys.delay,
-              ease: 'power2.inOut'
-            });
-          });
+        // === BEAT 3: Envelope halves open smoothly (1.4 - 3.5s) ===
+        .to(fragments[0], {
+          x: '-100%',
+          duration: 2.2,
+          ease: 'power3.inOut'
         }, 1.4)
-
-        // A few gentle fibers drift as fabric parts
-        .add(function () { spawnFibers(8); }, 2.0)
+        .to(fragments[1], {
+          x: '100%',
+          duration: 2.2,
+          ease: 'power3.inOut'
+        }, 1.4)
 
         // === BEAT 4: Warm golden light fills the space (2.0 - 4.0s) ===
         .to(glow, { scale: 1.2, opacity: 0.7, duration: 1.5, ease: 'power1.out' }, 2.0)
