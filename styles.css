@@ -176,6 +176,9 @@ img {
   will-change: transform, opacity, filter;
   -webkit-transform-origin: center bottom;
   transform-origin: center bottom;
+  overflow: visible;
+  padding: 0 2px;
+  -webkit-transform: translateZ(0);
 }
 
 .hero__line-bottom {

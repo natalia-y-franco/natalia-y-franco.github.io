@@ -122,6 +122,11 @@
           stagger: {
             each: 0.08,
             from: 'start'
+          },
+          onComplete: function () {
+            for (var i = 0; i < heroLetters.length; i++) {
+              heroLetters[i].style.willChange = 'auto';
+            }
           }
         }, 1.0)
 
