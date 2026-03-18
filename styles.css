@@ -677,14 +677,15 @@ img {
 #btn-confirmar {
   font-family: 'Abhaya Libre', serif;
   font-weight: 700;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 32px;
   letter-spacing: 0;
   color: #FFFFFF;
   background: #BFA880;
   border: 1px solid #FFF;
   box-shadow: 0px 6px 16px 0px #00000066;
-  width: 319px;
+  width: 100%;
+  max-width: unset;
 }
 
 .btn--primary:hover,
@@ -751,7 +752,7 @@ img {
   overflow-x: hidden;
   overflow-x: clip;
   overflow-y: visible;
-  background: url('assets/background-bottom.svg') top center / 100% 100% no-repeat;
+  background: url('assets/background-bottom.svg') top center / cover no-repeat;
 }
 
 .fiesta__title {
@@ -2278,4 +2279,10 @@ body.modal-open {
 }
 .dresscode {
   width: 90px;
+}
+.foto-footer {
+  margin-top: 50px;
+  filter: sepia(.6);
+    border-radius: 6px;
+    border: 2.5px solid #BFA880;
 }
