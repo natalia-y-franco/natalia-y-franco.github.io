@@ -1622,6 +1622,7 @@ html.intro-active body { overflow: hidden; height: 100%; }
 
 /* Wax spread — subtle reddish stain where wax seeped into fabric fibers */
 .intro__seal-wax {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1649,9 +1650,8 @@ html.intro-active body { overflow: hidden; height: 100%; }
   display: block;
   position: relative;
   z-index: 3;
-  /* Softer, more realistic shadow — pressed wax doesn't float high */
-  -webkit-filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4));
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+  -webkit-filter: none;
+  filter: none;
   will-change: transform, filter;
 }
 
