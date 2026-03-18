@@ -353,10 +353,6 @@ body {
   color: var(--orange);
 }
 
-.stats__note--send svg {
-  color: #25D366;
-}
-
 .stats__note strong {
   color: var(--brown);
 }

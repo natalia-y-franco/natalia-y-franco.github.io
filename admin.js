@@ -216,8 +216,9 @@
     document.getElementById('stat-declinados').textContent = stats.declinados;
     document.getElementById('stat-personas-declinadas').textContent = stats.personasDeclinadas || 0;
     document.getElementById('stat-alergias').textContent = stats.conAlergias;
-    document.getElementById('stat-enviadas').textContent = stats.enviadas || 0;
-    document.getElementById('stat-total-envio').textContent = stats.totalInvitados;
+    var enviadas = stats.enviadas || 0;
+    document.getElementById('stat-enviadas').textContent = enviadas;
+    document.getElementById('stat-por-enviar').textContent = stats.totalInvitados - enviadas;
   }
 
   // ============================
@@ -361,7 +362,7 @@
   function updateSentCount() {
     var sent = guests.filter(function (g) { return g.enviada === 'TRUE'; }).length;
     document.getElementById('stat-enviadas').textContent = sent;
-    document.getElementById('stat-total-envio').textContent = guests.length;
+    document.getElementById('stat-por-enviar').textContent = guests.length - sent;
   }
 
   // ============================
