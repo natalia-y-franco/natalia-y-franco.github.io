@@ -49,8 +49,8 @@
     var heroLetters = document.querySelectorAll('.hero__letter');
 
     // --- Initial hidden states: Hero ---
-    gsap.set('.hero__photo', { opacity: 0, scale: 1.15 });
-    gsap.set('.hero__photo img', { scale: 1.25 });
+    gsap.set('.hero__photo', { opacity: 0, scale: 1.3 });
+    gsap.set('.hero__photo img', { scale: 1.5 });
     gsap.set('.hero__date-line', { scaleX: 0 });
     gsap.set('.hero__date-text', { opacity: 0, y: 15, filter: 'blur(6px)' });
     gsap.set('.hero__names', { opacity: 1, y: 0, scale: 1 });
