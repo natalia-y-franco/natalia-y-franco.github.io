@@ -353,6 +353,10 @@ body {
   color: var(--orange);
 }
 
+.stats__note--send svg {
+  color: #25D366;
+}
+
 .stats__note strong {
   color: var(--brown);
 }
@@ -592,6 +596,16 @@ body {
 }
 
 .badge--none {
+  background: var(--gray-light);
+  color: #999;
+}
+
+.badge--sent {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.badge--not-sent {
   background: var(--gray-light);
   color: #999;
 }
@@ -921,7 +935,9 @@ body {
    ======================================== */
 @media (max-width: 640px) {
   .table th:nth-child(3),
-  .table td:nth-child(3) {
+  .table td:nth-child(3),
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
     display: none;
   }
 

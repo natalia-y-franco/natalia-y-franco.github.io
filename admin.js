@@ -47,6 +47,7 @@
   var filterStatus = document.getElementById('filter-status');
   var filterGroup = document.getElementById('filter-group');
   var filterAllergy = document.getElementById('filter-allergy');
+  var filterEnviada = document.getElementById('filter-enviada');
   var tbody = document.getElementById('guests-tbody');
   var tableEmpty = document.getElementById('table-empty');
   var table = document.getElementById('guests-table');
@@ -148,6 +149,7 @@
     guests = (data.invitados || []).map(function (g) {
       g.confirmacion = (g.confirmacion || '').toUpperCase();
       g.alergias = (g.alergias || '').toUpperCase();
+      g.enviada = (g.enviada || '').toUpperCase();
       return g;
     });
     updateStats(data.stats);
@@ -214,6 +216,8 @@
     document.getElementById('stat-declinados').textContent = stats.declinados;
     document.getElementById('stat-personas-declinadas').textContent = stats.personasDeclinadas || 0;
     document.getElementById('stat-alergias').textContent = stats.conAlergias;
+    document.getElementById('stat-enviadas').textContent = stats.enviadas || 0;
+    document.getElementById('stat-total-envio').textContent = stats.totalInvitados;
   }
 
   // ============================
@@ -239,6 +243,7 @@
     var status = filterStatus.value;
     var group = filterGroup.value;
     var allergy = filterAllergy.value;
+    var enviada = filterEnviada.value;
 
     return guests.filter(function (g) {
       if (search && !(g.nombre + ' ' + g.acompanante).toLowerCase().includes(search)) return false;
@@ -248,6 +253,8 @@
       if (group !== 'all' && g.grupo !== group) return false;
       if (allergy === 'yes' && g.alergias !== 'TRUE') return false;
       if (allergy === 'no' && g.alergias === 'TRUE') return false;
+      if (enviada === 'sent' && g.enviada !== 'TRUE') return false;
+      if (enviada === 'not-sent' && g.enviada === 'TRUE') return false;
       return true;
     });
   }
@@ -256,6 +263,7 @@
   filterStatus.addEventListener('change', renderTable);
   filterGroup.addEventListener('change', renderTable);
   filterAllergy.addEventListener('change', renderTable);
+  filterEnviada.addEventListener('change', renderTable);
 
   // ============================
   // TABLE RENDERING
@@ -294,6 +302,10 @@
         allergyBadge = '<span class="badge badge--none">—</span>';
       }
 
+      var sentBadge = g.enviada === 'TRUE'
+        ? '<span class="badge badge--sent">Enviada</span>'
+        : '<span class="badge badge--not-sent">No enviada</span>';
+
       var waLink = buildWhatsAppLink(g);
 
       tr.innerHTML =
@@ -301,9 +313,10 @@
         '<td>' + escapeHtml(g.acompanante || '—') + '</td>' +
         '<td>' + escapeHtml(g.grupo || '—') + '</td>' +
         '<td>' + statusBadge + '</td>' +
+        '<td>' + sentBadge + '</td>' +
         '<td>' + allergyBadge + '</td>' +
         '<td><div class="row-actions">' +
-          '<a class="row-btn row-btn--wa" href="' + escapeHtml(waLink) + '" target="_blank" title="Enviar WhatsApp">WA</a>' +
+          '<a class="row-btn row-btn--wa btn-wa-send" href="' + escapeHtml(waLink) + '" target="_blank" title="Enviar WhatsApp" data-token="' + escapeHtml(g.token) + '">WA</a>' +
           '<button class="row-btn btn-detail" data-token="' + escapeHtml(g.token) + '" title="Ver detalle">Ver</button>' +
         '</div></td>';
 
@@ -318,6 +331,37 @@
         if (guest) showDetail(guest);
       });
     });
+
+    // Mark as sent when WA link is clicked
+    tbody.querySelectorAll('.btn-wa-send').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var token = this.getAttribute('data-token');
+        markAsSent(token);
+      });
+    });
+  }
+
+  // ============================
+  // MARK AS SENT
+  // ============================
+  function markAsSent(token) {
+    adminAction('markSent', { token: token })
+      .then(function (data) {
+        if (!data.error) {
+          // Update local data
+          var guest = guests.find(function (g) { return g.token === token; });
+          if (guest) guest.enviada = 'TRUE';
+          renderTable();
+          updateSentCount();
+        }
+      })
+      .catch(function () { /* silent fail */ });
+  }
+
+  function updateSentCount() {
+    var sent = guests.filter(function (g) { return g.enviada === 'TRUE'; }).length;
+    document.getElementById('stat-enviadas').textContent = sent;
+    document.getElementById('stat-total-envio').textContent = guests.length;
   }
 
   // ============================
@@ -415,6 +459,7 @@
       var g = pendingGuests[i];
       var link = buildWhatsAppLink(g);
       window.open(link, '_blank');
+      markAsSent(g.token);
 
       i++;
       var pct = Math.round((i / pendingGuests.length) * 100);
@@ -445,17 +490,21 @@
     var statusText = g.confirmacion === 'TRUE' ? 'Confirmado' : g.confirmacion === 'FALSE' ? 'No asiste' : 'Pendiente';
     var alergiasText = g.alergias === 'TRUE' ? 'Sí — ' + (g.detalleAlergias || 'sin detalle') : g.alergias === 'FALSE' ? 'No' : 'Sin respuesta';
 
+    var enviadaText = g.enviada === 'TRUE' ? 'Sí' : 'No';
+
     var grid = document.getElementById('detail-grid');
     grid.innerHTML =
       '<span class="detail-grid__label">Grupo</span><span class="detail-grid__value">' + escapeHtml(g.grupo || '—') + '</span>' +
       '<span class="detail-grid__label">Acompañante</span><span class="detail-grid__value">' + escapeHtml(g.acompanante || 'Sin acompañante') + '</span>' +
       '<span class="detail-grid__label">Teléfono</span><span class="detail-grid__value">' + escapeHtml(g.telefono || '—') + '</span>' +
       '<span class="detail-grid__label">Estado</span><span class="detail-grid__value">' + statusText + '</span>' +
+      '<span class="detail-grid__label">Enviada por WA</span><span class="detail-grid__value">' + enviadaText + '</span>' +
       '<span class="detail-grid__label">Alergias</span><span class="detail-grid__value">' + escapeHtml(alergiasText) + '</span>' +
       '<span class="detail-grid__label">Link invitación</span><span class="detail-grid__value">' + escapeHtml(url) + '</span>';
 
     document.getElementById('detail-wa').onclick = function () {
       window.open(buildWhatsAppLink(g), '_blank');
+      markAsSent(g.token);
     };
 
     var detailLink = document.getElementById('detail-link');
@@ -739,11 +788,12 @@
   // ============================
   document.getElementById('btn-export-csv').addEventListener('click', function () {
     if (!guests.length) return;
-    var headers = ['Nombre', 'Acompañante', 'Grupo', 'Teléfono', 'Confirmación', 'Alergias', 'Detalle alergias', 'Link invitación'];
+    var headers = ['Nombre', 'Acompañante', 'Grupo', 'Teléfono', 'Confirmación', 'Enviada WA', 'Alergias', 'Detalle alergias', 'Link invitación'];
     var rows = guests.map(function (g) {
       var status = g.confirmacion === 'TRUE' ? 'Confirmado' : g.confirmacion === 'FALSE' ? 'No asiste' : 'Pendiente';
       var alergia = g.alergias === 'TRUE' ? 'Sí' : g.alergias === 'FALSE' ? 'No' : '';
-      return [g.nombre, g.acompanante, g.grupo, g.telefono, status, alergia, g.detalleAlergias, buildInvitationUrl(g)];
+      var enviada = g.enviada === 'TRUE' ? 'Sí' : 'No';
+      return [g.nombre, g.acompanante, g.grupo, g.telefono, status, enviada, alergia, g.detalleAlergias, buildInvitationUrl(g)];
     });
 
     var csv = '\uFEFF' + headers.join(',') + '\n' + rows.map(function (r) {
