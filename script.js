@@ -49,8 +49,8 @@
     var heroLetters = document.querySelectorAll('.hero__letter');
 
     // --- Initial hidden states: Hero ---
-    gsap.set('.hero__photo', { opacity: 0, scale: 1.08 });
-    gsap.set('.hero__photo img', { scale: 1.12 });
+    gsap.set('.hero__photo', { opacity: 0, scale: 1.15 });
+    gsap.set('.hero__photo img', { scale: 1.25 });
     gsap.set('.hero__date-line', { scaleX: 0 });
     gsap.set('.hero__date-text', { opacity: 0, y: 15, filter: 'blur(6px)' });
     gsap.set('.hero__names', { opacity: 1, y: 0, scale: 1 });
@@ -102,9 +102,9 @@
       var tl = gsap.timeline();
 
       tl
-        // Photo breathes in with cinematic zoom
-        .to('.hero__photo', { opacity: 1, scale: 1, duration: 2.5, ease: 'power3.out' }, 0)
-        .to('.hero__photo img', { scale: 1, duration: 5, ease: 'power1.out' }, 0)
+        // Photo breathes in with cinematic zoom-out
+        .to('.hero__photo', { opacity: 1, scale: 1, duration: 3, ease: 'power2.out' }, 0)
+        .to('.hero__photo img', { scale: 1, duration: 10, ease: 'power1.out' }, 0)
 
         // Date lines extend from center
         .to('.hero__date-line', { scaleX: 1, duration: 1.2, ease: 'expo.out' }, 0.6)
