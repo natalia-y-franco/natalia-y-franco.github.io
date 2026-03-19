@@ -539,7 +539,7 @@
     gsap.set(envelope, { opacity: 0, scale: 1.03 });
     // Seal starts above, larger (approaching from distance)
     gsap.set(seal, { opacity: 0, scale: 1.5, y: -80 });
-    gsap.set(sealImg, { filter: 'brightness(0.6)' });
+    gsap.set(sealImg, { filter: 'none' });
     gsap.set(sealShadow, { opacity: 0, scale: 0.5 });
     gsap.set(sealWax, { opacity: 0, scale: 0.6 });
     gsap.set(sealImprint, { opacity: 0 });
@@ -579,20 +579,6 @@
         ease: 'elastic.out(1.2, 0.4)'
       }, 2.6)
 
-      // Brightness transitions as seal stamps down
-      .to(sealImg, {
-        filter: 'brightness(0.85)',
-        duration: 0.5, ease: 'power3.in'
-      }, 2.0)
-      // Impact flash — brief brightness spike
-      .to(sealImg, {
-        filter: 'brightness(1.3)',
-        duration: 0.08, ease: 'power2.in'
-      }, 2.5)
-      .to(sealImg, {
-        filter: 'brightness(1.05)',
-        duration: 0.8, ease: 'power2.out'
-      }, 2.58)
 
       // Allow interaction once seal has landed
       .add(function () { entranceDone = true; }, 2.6)
@@ -603,11 +589,6 @@
       // Wax spread seeps into fabric after stamp
       .to(sealWax, { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.55)
 
-      // Seal illumination sequence (warm glow now that it's settled)
-      .to(sealImg, {
-        filter: 'brightness(1.1)',
-        duration: 1.5, ease: 'power2.inOut'
-      }, 3.0)
       .to(sealGlow, { opacity: 0.9, scale: 1, duration: 1.4, ease: 'power2.out' }, 2.8)
       .to(sealRing, { opacity: 0.8, scale: 1, duration: 1.2, ease: 'power2.out' }, 3.0)
 
