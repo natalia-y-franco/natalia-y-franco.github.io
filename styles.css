@@ -420,10 +420,10 @@ img {
 .message__text {
   position: relative;
   z-index: 1;
-  font-family: 'Beau Rivage', cursive;
-  font-weight: 400;
-  font-size: 28px;
-  line-height: 32px;
+  font-family: 'Dancing Script', cursive;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 30px;
   letter-spacing: 0;
   text-align: center;
   color: #363636;
