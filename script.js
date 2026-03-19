@@ -537,9 +537,9 @@
 
     // Initial states
     gsap.set(envelope, { opacity: 0, scale: 1.03 });
-    // Seal starts above, larger (approaching from distance), with heavy floating shadow
+    // Seal starts above, larger (approaching from distance)
     gsap.set(seal, { opacity: 0, scale: 1.5, y: -80 });
-    gsap.set(sealImg, { filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.8)) brightness(0.6)' });
+    gsap.set(sealImg, { filter: 'brightness(0.6)' });
     gsap.set(sealShadow, { opacity: 0, scale: 0.5 });
     gsap.set(sealWax, { opacity: 0, scale: 0.6 });
     gsap.set(sealImprint, { opacity: 0 });
@@ -550,8 +550,7 @@
 
     var entranceDone = false;
     var entranceTL = gsap.timeline({
-      delay: 0.3,
-      onComplete: function () { entranceDone = true; }
+      delay: 0.3
     });
 
     entranceTL
@@ -580,20 +579,23 @@
         ease: 'elastic.out(1.2, 0.4)'
       }, 2.6)
 
-      // Shadow transitions from floating (big blur) to pressed (tight contact shadow)
+      // Brightness transitions as seal stamps down
       .to(sealImg, {
-        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(0.85)',
+        filter: 'brightness(0.85)',
         duration: 0.5, ease: 'power3.in'
       }, 2.0)
       // Impact flash — brief brightness spike
       .to(sealImg, {
-        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(1.3)',
+        filter: 'brightness(1.3)',
         duration: 0.08, ease: 'power2.in'
       }, 2.5)
       .to(sealImg, {
-        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 1px 1px rgba(0,0,0,0.4)) brightness(1.05)',
+        filter: 'brightness(1.05)',
         duration: 0.8, ease: 'power2.out'
       }, 2.58)
+
+      // Allow interaction once seal has landed
+      .add(function () { entranceDone = true; }, 2.6)
 
       // Pressed shadow ring appears on impact
       .to(sealShadow, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }, 2.5)
@@ -601,12 +603,9 @@
       // Wax spread seeps into fabric after stamp
       .to(sealWax, { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 2.55)
 
-      // Burlap imprint texture fades in on the wax surface
-      .to(sealImprint, { opacity: 0.7, duration: 1.5, ease: 'power1.inOut' }, 2.7)
-
       // Seal illumination sequence (warm glow now that it's settled)
       .to(sealImg, {
-        filter: 'drop-shadow(0 2px 6px rgba(191,168,128,0.4)) drop-shadow(0 1px 1px rgba(0,0,0,0.3)) brightness(1.1)',
+        filter: 'brightness(1.1)',
         duration: 1.5, ease: 'power2.inOut'
       }, 3.0)
       .to(sealGlow, { opacity: 0.9, scale: 1, duration: 1.4, ease: 'power2.out' }, 2.8)
@@ -672,60 +671,59 @@
       var openTL = gsap.timeline();
 
       openTL
-        // === BEAT 1: Seal softens with warm glow (0 - 1.2s) ===
-        .to(tap, { opacity: 0, y: 8, duration: 0.5, ease: 'power2.inOut' }, 0)
+        // === BEAT 1: Seal softens (0 - 0.6s) ===
+        .to(tap, { opacity: 0, y: 8, duration: 0.3, ease: 'power2.inOut' }, 0)
 
         // Wax layers soften
-        .to(sealShadow, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 0)
-        .to(sealImprint, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 0)
-        .to(sealWax, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 0)
+        .to(sealShadow, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 0)
+        .to(sealImprint, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 0)
+        .to(sealWax, { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, 0)
 
         // Warm glow expands behind seal
-        .to(sealGlow, { scale: 2.5, opacity: 0.8, duration: 1.2, ease: 'power2.out' }, 0.2)
-        .to(glow2, { scale: 0.8, opacity: 0.5, duration: 1.2, ease: 'power2.out' }, 0.3)
+        .to(sealGlow, { scale: 2.5, opacity: 0.8, duration: 0.6, ease: 'power2.out' }, 0.1)
+        .to(glow2, { scale: 0.8, opacity: 0.5, duration: 0.6, ease: 'power2.out' }, 0.15)
 
         // Spawn just a few delicate particles
         .add(function () {
           spawnBurst(20);
-        }, 0.6)
+        }, 0.3)
 
-        // === BEAT 2: Seal fades gracefully (1.0 - 2.8s) ===
-        // Gentle lift and fade — opacity only, no filter changes
+        // === BEAT 2: Seal fades (0.4 - 1.2s) ===
         .to(seal, {
-          opacity: 0, y: -25, duration: 2,
+          opacity: 0, y: -25, duration: 0.8,
           ease: 'power2.inOut'
-        }, 1.0)
-        .to(sealRing, { scale: 1.5, opacity: 0, duration: 1.2, ease: 'power2.out' }, 1.0)
+        }, 0.4)
+        .to(sealRing, { scale: 1.5, opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.4)
 
-        // Glow expands gently as seal releases
-        .to(sealGlow, { scale: 3.5, opacity: 0, duration: 2, ease: 'power1.out' }, 1.2)
+        // Glow expands as seal releases
+        .to(sealGlow, { scale: 3.5, opacity: 0, duration: 1, ease: 'power1.out' }, 0.5)
 
-        // === BEAT 3: Envelope halves open smoothly (1.4 - 3.5s) ===
+        // === BEAT 3: Envelope halves open (0.6 - 2.0s) ===
         .to(fragments[0], {
           x: '-100%',
-          duration: 2.2,
+          duration: 1.4,
           ease: 'power3.inOut'
-        }, 1.4)
+        }, 0.6)
         .to(fragments[1], {
           x: '100%',
-          duration: 2.2,
+          duration: 1.4,
           ease: 'power3.inOut'
-        }, 1.4)
+        }, 0.6)
 
-        // === BEAT 4: Warm golden light fills the space (2.0 - 4.0s) ===
-        .to(glow, { scale: 1.2, opacity: 0.7, duration: 1.5, ease: 'power1.out' }, 2.0)
-        .to(glow2, { scale: 1.8, opacity: 0.5, duration: 1.5, ease: 'power1.out' }, 2.2)
+        // === BEAT 4: Golden light fills (1.0 - 2.0s) ===
+        .to(glow, { scale: 1.2, opacity: 0.7, duration: 0.8, ease: 'power1.out' }, 1.0)
+        .to(glow2, { scale: 1.8, opacity: 0.5, duration: 0.8, ease: 'power1.out' }, 1.1)
 
-        // Particles gently fade
-        .to(particleAlpha, { value: 0.6, duration: 1, ease: 'power1.inOut' }, 2.0)
-        .to(particleAlpha, { value: 0, duration: 1.5, ease: 'power2.in' }, 3.0)
+        // Particles fade
+        .to(particleAlpha, { value: 0.6, duration: 0.5, ease: 'power1.inOut' }, 1.0)
+        .to(particleAlpha, { value: 0, duration: 0.8, ease: 'power2.in' }, 1.5)
 
-        // Glows dissolve slowly
-        .to(glow, { scale: 2.5, opacity: 0, duration: 1.5, ease: 'power1.inOut' }, 3.5)
-        .to(glow2, { scale: 2.5, opacity: 0, duration: 1.2, ease: 'power1.inOut' }, 3.6)
+        // Glows dissolve
+        .to(glow, { scale: 2.5, opacity: 0, duration: 0.8, ease: 'power1.inOut' }, 1.8)
+        .to(glow2, { scale: 2.5, opacity: 0, duration: 0.6, ease: 'power1.inOut' }, 1.9)
 
-        // === BEAT 5: Soft warm transition to page (3.8 - 5.2s) ===
-        .to(flash, { opacity: 1, duration: 1.4, ease: 'power1.inOut' }, 3.8)
+        // === BEAT 5: Transition to page (2.0 - 3.0s) ===
+        .to(flash, { opacity: 1, duration: 0.8, ease: 'power1.inOut' }, 2.0)
 
         // Cleanup
         .add(function () {
@@ -735,7 +733,7 @@
           document.documentElement.classList.remove('intro-active');
           if (revealHero) revealHero();
           setupScrollReveals();
-        }, 5.2);
+        }, 2.8);
     });
   }
 
