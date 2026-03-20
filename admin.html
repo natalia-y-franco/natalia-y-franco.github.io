@@ -197,29 +197,63 @@
     </main>
   </div>
 
-  <!-- WhatsApp send modal -->
+  <!-- WhatsApp send wizard modal -->
   <div class="modal-overlay" id="wa-modal" style="display:none;">
-    <div class="modal-box">
-      <h2 class="modal-box__title">Enviar invitaciones</h2>
-      <div class="modal-box__filter" id="wa-filter">
-        <label style="font-size:14px;color:#6B6B6B;display:block;margin-bottom:8px;">Enviar a:</label>
-        <select class="filters__select" id="wa-target" style="width:100%;margin-bottom:16px;">
-          <option value="all">Todos los invitados</option>
-          <option value="pending">Solo pendientes (sin respuesta)</option>
-        </select>
-      </div>
-      <p class="modal-box__desc" id="wa-modal-desc"></p>
-      <div class="modal-box__list" id="wa-preview" style="max-height:200px;overflow-y:auto;margin-bottom:16px;font-size:13px;color:#5C4A32;"></div>
-      <div class="modal-box__progress" id="wa-progress" style="display:none;">
-        <div class="modal-box__bar">
-          <div class="modal-box__bar-fill" id="wa-bar-fill"></div>
+    <div class="modal-box modal-box--wide">
+
+      <!-- Step 1: Select target and confirm -->
+      <div id="wa-step-select">
+        <h2 class="modal-box__title">Enviar invitaciones</h2>
+        <div class="wa-wizard__filter">
+          <label style="font-size:14px;color:#6B6B6B;display:block;margin-bottom:8px;">Enviar a:</label>
+          <select class="filters__select" id="wa-target" style="width:100%;margin-bottom:16px;">
+            <option value="all">Todos los invitados</option>
+            <option value="pending">Solo pendientes (sin respuesta)</option>
+          </select>
         </div>
-        <p class="modal-box__status" id="wa-status"></p>
+        <p class="modal-box__desc" id="wa-modal-desc"></p>
+        <div class="modal-box__actions">
+          <button class="action-btn action-btn--whatsapp" id="wa-start">Comenzar envío</button>
+          <button class="action-btn action-btn--secondary" id="wa-cancel-select">Cancelar</button>
+        </div>
       </div>
-      <div class="modal-box__actions">
-        <button class="action-btn action-btn--whatsapp" id="wa-start">Comenzar envío</button>
-        <button class="action-btn action-btn--secondary" id="wa-cancel">Cancelar</button>
+
+      <!-- Step 2: Send one by one -->
+      <div id="wa-step-send" style="display:none;">
+        <div class="wa-wizard__header">
+          <h2 class="modal-box__title">Enviar invitaciones</h2>
+          <span class="wa-wizard__counter" id="wa-counter">1 de 10</span>
+        </div>
+        <div class="wa-wizard__progress">
+          <div class="wa-wizard__progress-bar" id="wa-bar-fill"></div>
+        </div>
+        <div class="wa-wizard__card" id="wa-card">
+          <div class="wa-wizard__recipient" id="wa-recipient-name"></div>
+          <div class="wa-wizard__recipient-detail" id="wa-recipient-detail"></div>
+          <div class="wa-wizard__msg-preview" id="wa-msg-preview"></div>
+          <img class="wa-wizard__img-preview" id="wa-img-preview" alt="Miniatura invitación">
+        </div>
+        <div class="wa-wizard__actions">
+          <button class="action-btn action-btn--whatsapp wa-wizard__send-btn" id="wa-send-current">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+            Enviar a ...
+          </button>
+          <div class="wa-wizard__nav">
+            <button class="action-btn action-btn--secondary" id="wa-skip">Saltar</button>
+            <button class="action-btn action-btn--secondary" id="wa-cancel-send">Cerrar</button>
+          </div>
+        </div>
       </div>
+
+      <!-- Step 3: Done -->
+      <div id="wa-step-done" style="display:none;">
+        <div style="text-align:center;padding:24px 0;">
+          <h2 class="modal-box__title" style="margin-bottom:12px;">Envío completado</h2>
+          <p class="modal-box__desc" id="wa-done-msg">Se enviaron 0 invitaciones.</p>
+          <button class="action-btn action-btn--primary" id="wa-done-close">Cerrar</button>
+        </div>
+      </div>
+
     </div>
   </div>
 

@@ -440,16 +440,26 @@
   // ============================
   var waModal = document.getElementById('wa-modal');
   var waModalDesc = document.getElementById('wa-modal-desc');
-  var waProgress = document.getElementById('wa-progress');
   var waBarFill = document.getElementById('wa-bar-fill');
-  var waStatus = document.getElementById('wa-status');
-  var waStartBtn = document.getElementById('wa-start');
-  var waCancelBtn = document.getElementById('wa-cancel');
-  var waSendAborted = false;
-
   var waTarget = document.getElementById('wa-target');
-  var waPreview = document.getElementById('wa-preview');
-  var waFilter = document.getElementById('wa-filter');
+
+  // Wizard state
+  var waList = [];
+  var waIndex = 0;
+  var waSentCount = 0;
+
+  // Wizard DOM
+  var waStepSelect = document.getElementById('wa-step-select');
+  var waStepSend = document.getElementById('wa-step-send');
+  var waStepDone = document.getElementById('wa-step-done');
+  var waCounter = document.getElementById('wa-counter');
+  var waCard = document.getElementById('wa-card');
+  var waRecipientName = document.getElementById('wa-recipient-name');
+  var waRecipientDetail = document.getElementById('wa-recipient-detail');
+  var waMsgPreview = document.getElementById('wa-msg-preview');
+  var waImgPreview = document.getElementById('wa-img-preview');
+  var waSendCurrentBtn = document.getElementById('wa-send-current');
+  var waDoneMsg = document.getElementById('wa-done-msg');
 
   function getWaSendList() {
     var target = waTarget.value;
@@ -460,60 +470,96 @@
     });
   }
 
-  function updateWaPreview() {
-    var list = getWaSendList();
-    waModalDesc.textContent = 'Se abrirán ' + list.length + ' ventanas de WhatsApp, una cada 3 segundos. Solo debes presionar "Enviar" en cada una.';
-    waPreview.innerHTML = list.map(function (g, i) {
-      return '<div style="padding:4px 0;border-bottom:1px solid #F2EDE5;">' + (i + 1) + '. ' + escapeHtml(g.nombre) + (g.acompanante ? ' (+' + escapeHtml(g.acompanante) + ')' : '') + '</div>';
-    }).join('');
+  function waShowStep(step) {
+    waStepSelect.style.display = step === 'select' ? '' : 'none';
+    waStepSend.style.display = step === 'send' ? '' : 'none';
+    waStepDone.style.display = step === 'done' ? '' : 'none';
   }
 
+  function waUpdateCard() {
+    if (waIndex >= waList.length) {
+      waDoneMsg.textContent = 'Se enviaron ' + waSentCount + ' de ' + waList.length + ' invitaciones.';
+      waShowStep('done');
+      return;
+    }
+
+    var g = waList[waIndex];
+    var msg = buildMessage(g);
+
+    waCounter.textContent = (waIndex + 1) + ' de ' + waList.length;
+    var pct = waList.length > 0 ? Math.round((waIndex / waList.length) * 100) : 0;
+    waBarFill.style.width = pct + '%';
+
+    waRecipientName.textContent = g.nombre;
+    waRecipientDetail.textContent = g.acompanante
+      ? g.acompanante + ' — ' + (g.telefono || 'sin teléfono')
+      : g.telefono || 'sin teléfono';
+
+    waMsgPreview.textContent = msg;
+    waSendCurrentBtn.innerHTML =
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg> ' +
+      'Enviar a ' + escapeHtml(g.nombre.split(' ')[0]);
+  }
+
+  function waAdvance() {
+    waIndex++;
+    waUpdateCard();
+  }
+
+  // Pre-load invitation image for previewing
+  waImgPreview.src = BASE_URL + '/assets/miniatura-invitacion.jpeg';
+
+  // Open wizard
   document.getElementById('btn-send-all').addEventListener('click', function () {
-    waProgress.style.display = 'none';
-    waBarFill.style.width = '0%';
-    waStartBtn.style.display = '';
-    waFilter.style.display = '';
-    waCancelBtn.textContent = 'Cancelar';
-    waSendAborted = false;
-    updateWaPreview();
+    waShowStep('select');
+    waTarget.value = 'pending';
+    var list = getWaSendList();
+    waModalDesc.textContent = list.length > 0
+      ? list.length + ' invitados por enviar. Se mostrará uno a la vez para que envíes manualmente.'
+      : 'No hay invitados que cumplan ese filtro.';
     waModal.style.display = '';
   });
 
-  waTarget.addEventListener('change', updateWaPreview);
-
-  waStartBtn.addEventListener('click', function () {
-    waStartBtn.style.display = 'none';
-    waFilter.style.display = 'none';
-    waPreview.style.display = 'none';
-    waProgress.style.display = '';
-
-    var pendingGuests = getWaSendList();
-
-    var i = 0;
-    function sendNext() {
-      if (waSendAborted || i >= pendingGuests.length) {
-        waStatus.textContent = waSendAborted ? 'Envío cancelado.' : 'Envío completado.';
-        waBarFill.style.width = '100%';
-        waCancelBtn.textContent = 'Cerrar';
-        return;
-      }
-
-      var g = pendingGuests[i];
-      sendWhatsAppWithImage(g, function () {
-        i++;
-        var pct = Math.round((i / pendingGuests.length) * 100);
-        waBarFill.style.width = pct + '%';
-        waStatus.textContent = 'Enviando ' + i + ' de ' + pendingGuests.length + ': ' + g.nombre;
-
-        setTimeout(sendNext, 3000);
-      });
-    }
-
-    sendNext();
+  waTarget.addEventListener('change', function () {
+    var list = getWaSendList();
+    waModalDesc.textContent = list.length > 0
+      ? list.length + ' invitados por enviar. Se mostrará uno a la vez para que envíes manualmente.'
+      : 'No hay invitados que cumplan ese filtro.';
   });
 
-  waCancelBtn.addEventListener('click', function () {
-    waSendAborted = true;
+  // Start sending
+  document.getElementById('wa-start').addEventListener('click', function () {
+    waList = getWaSendList();
+    if (waList.length === 0) return;
+    waIndex = 0;
+    waSentCount = 0;
+    waShowStep('send');
+    waUpdateCard();
+  });
+
+  // Send current guest
+  waSendCurrentBtn.addEventListener('click', function () {
+    if (waIndex >= waList.length) return;
+    var g = waList[waIndex];
+    sendWhatsAppWithImage(g);
+    waSentCount++;
+    waAdvance();
+  });
+
+  // Skip current guest
+  document.getElementById('wa-skip').addEventListener('click', function () {
+    waAdvance();
+  });
+
+  // Cancel buttons
+  document.getElementById('wa-cancel-select').addEventListener('click', function () {
+    waModal.style.display = 'none';
+  });
+  document.getElementById('wa-cancel-send').addEventListener('click', function () {
+    waDoneMsg.textContent = 'Se enviaron ' + waSentCount + ' de ' + waList.length + ' invitaciones.';
+    waShowStep('done');
+  });
+  document.getElementById('wa-done-close').addEventListener('click', function () {
     waModal.style.display = 'none';
   });
 
