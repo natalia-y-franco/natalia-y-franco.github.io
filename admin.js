@@ -436,24 +436,29 @@
   }
 
   function sendWhatsAppWithImage(g, onDone) {
-    var msg = buildMessage(g);
-    loadShareImage(function (file) {
-      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          text: msg,
-          files: [file]
-        }).then(function () {
-          if (onDone) onDone(true);
-        }).catch(function () {
-          // User cancelled or error — fallback to wa.me
+    // On mobile with Web Share API: share with image
+    if (navigator.canShare) {
+      loadShareImage(function (file) {
+        if (file && navigator.canShare({ files: [file] })) {
+          navigator.share({
+            text: buildMessage(g),
+            files: [file]
+          }).then(function () {
+            if (onDone) onDone(true);
+          }).catch(function () {
+            window.open(buildWhatsAppLink(g), '_blank');
+            if (onDone) onDone(true);
+          });
+        } else {
           window.open(buildWhatsAppLink(g), '_blank');
           if (onDone) onDone(true);
-        });
-      } else {
-        window.open(buildWhatsAppLink(g), '_blank');
-        if (onDone) onDone(true);
-      }
-    });
+        }
+      });
+    } else {
+      // Desktop: open WA link directly (sync, no popup blocker)
+      window.open(buildWhatsAppLink(g), '_blank');
+      if (onDone) onDone(true);
+    }
   }
 
   function buildInvitationUrl(g) {
