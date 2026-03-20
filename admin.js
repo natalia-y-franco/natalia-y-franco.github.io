@@ -435,9 +435,13 @@
       });
   }
 
+  function isMobile() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
   function sendWhatsAppWithImage(g, onDone) {
-    // On mobile with Web Share API: share with image
-    if (navigator.canShare) {
+    if (isMobile() && navigator.canShare) {
+      // Mobile: use Web Share API with image
       loadShareImage(function (file) {
         if (file && navigator.canShare({ files: [file] })) {
           navigator.share({
@@ -455,7 +459,7 @@
         }
       });
     } else {
-      // Desktop: open WA link directly (sync, no popup blocker)
+      // Desktop: open WA link directly
       window.open(buildWhatsAppLink(g), '_blank');
       if (onDone) onDone(true);
     }
