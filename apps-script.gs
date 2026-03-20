@@ -106,6 +106,8 @@ function handleAdmin(params) {
   if (sub === 'deleteGuest') return adminDeleteGuest(params);
   if (sub === 'resetConfirm') return adminResetConfirm(params);
   if (sub === 'markSent') return adminMarkSent(params);
+  if (sub === 'getMsgTemplate') return adminGetMsgTemplate();
+  if (sub === 'saveMsgTemplate') return adminSaveMsgTemplate(params);
   if (sub === 'syncTokens') {
     var count = autoSync();
     return respond({ ok: true, synced: count, mensaje: count > 0 ? 'Se sincronizaron ' + count + ' invitados.' : 'Todo sincronizado, no hay tokens faltantes.' });
@@ -376,6 +378,49 @@ function adminResetConfirm(params) {
   sheet.getRange(targetRow, colMap['Detalle alergias'] + 1).setValue('');
 
   return respond({ ok: true, mensaje: 'Confirmación reseteada. El invitado puede volver a responder.' });
+}
+
+// ========================================
+// ADMIN — Obtener mensaje template
+// ========================================
+function adminGetMsgTemplate() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var configSheet = ss.getSheetByName('Config');
+  if (!configSheet) return respond({ ok: true, template: '' });
+
+  var data = configSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === 'wa_msg_template') {
+      return respond({ ok: true, template: data[i][1] || '' });
+    }
+  }
+  return respond({ ok: true, template: '' });
+}
+
+// ========================================
+// ADMIN — Guardar mensaje template
+// ========================================
+function adminSaveMsgTemplate(params) {
+  var template = params.template || '';
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var configSheet = ss.getSheetByName('Config');
+
+  if (!configSheet) {
+    configSheet = ss.insertSheet('Config');
+    configSheet.getRange(1, 1, 1, 2).setValues([['Clave', 'Valor']]);
+  }
+
+  var data = configSheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === 'wa_msg_template') {
+      configSheet.getRange(i + 1, 2).setValue(template);
+      return respond({ ok: true, mensaje: 'Mensaje guardado' });
+    }
+  }
+
+  // No existe, agregar nueva fila
+  configSheet.appendRow(['wa_msg_template', template]);
+  return respond({ ok: true, mensaje: 'Mensaje guardado' });
 }
 
 function respond(data) {

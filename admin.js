@@ -23,12 +23,29 @@
     + 'Confirma tu asistencia aquí:\n'
     + '{link}';
 
+  // Cached template (loaded from backend on login)
+  var _cachedMsgTemplate = null;
+
   function getMsgTemplate() {
-    return localStorage.getItem('wa_msg_template') || DEFAULT_MSG_TEMPLATE;
+    return _cachedMsgTemplate || localStorage.getItem('wa_msg_template') || DEFAULT_MSG_TEMPLATE;
+  }
+
+  function loadMsgTemplateFromServer() {
+    return adminAction('getMsgTemplate')
+      .then(function (data) {
+        if (data.ok && data.template) {
+          _cachedMsgTemplate = data.template;
+          localStorage.setItem('wa_msg_template', data.template);
+        }
+      })
+      .catch(function () { /* use local fallback */ });
   }
 
   function saveMsgTemplate(tpl) {
+    _cachedMsgTemplate = tpl;
     localStorage.setItem('wa_msg_template', tpl);
+    // Persist to backend
+    return adminAction('saveMsgTemplate', { template: tpl });
   }
 
   // ============================
@@ -157,6 +174,8 @@
     renderTable();
     dashLoading.style.display = 'none';
     mainContent.style.display = '';
+    // Load persisted message template from server
+    loadMsgTemplateFromServer();
 
     // Timestamp
     var now = new Date();
@@ -308,7 +327,6 @@
         ? '<span class="badge badge--sent">Enviada</span>'
         : '<span class="badge badge--not-sent">No enviada</span>';
 
-      var waLink = buildWhatsAppLink(g);
 
       tr.innerHTML =
         '<td><strong>' + escapeHtml(g.nombre) + '</strong></td>' +
@@ -318,7 +336,7 @@
         '<td>' + sentBadge + '</td>' +
         '<td>' + allergyBadge + '</td>' +
         '<td><div class="row-actions">' +
-          '<a class="row-btn row-btn--wa btn-wa-send" href="' + escapeHtml(waLink) + '" target="_blank" title="Enviar WhatsApp" data-token="' + escapeHtml(g.token) + '">WA</a>' +
+          '<button class="row-btn row-btn--wa btn-wa-send" title="Enviar WhatsApp" data-token="' + escapeHtml(g.token) + '">WA</button>' +
           '<button class="row-btn btn-detail" data-token="' + escapeHtml(g.token) + '" title="Ver detalle">Ver</button>' +
         '</div></td>';
 
@@ -334,11 +352,16 @@
       });
     });
 
-    // Mark as sent when WA link is clicked
+    // Send WA with image when WA button is clicked
     tbody.querySelectorAll('.btn-wa-send').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var token = this.getAttribute('data-token');
-        markAsSent(token);
+        var guest = guests.find(function (g) { return g.token === token; });
+        if (guest) {
+          sendWhatsAppWithImage(guest, function () {
+            markAsSent(token);
+          });
+        }
       });
     });
   }
@@ -389,6 +412,48 @@
 
   function buildWhatsAppLink(g) {
     return 'https://wa.me/' + g.telefono + '?text=' + encodeURIComponent(buildMessage(g));
+  }
+
+  // Cache the invitation thumbnail as a File object for Web Share API
+  var _shareImageFile = null;
+  var _shareImageLoading = false;
+
+  function loadShareImage(cb) {
+    if (_shareImageFile) return cb(_shareImageFile);
+    if (_shareImageLoading) return cb(null);
+    _shareImageLoading = true;
+    fetch(BASE_URL + '/assets/miniatura-invitacion.jpeg')
+      .then(function (r) { return r.blob(); })
+      .then(function (blob) {
+        _shareImageFile = new File([blob], 'invitacion.jpeg', { type: 'image/jpeg' });
+        _shareImageLoading = false;
+        cb(_shareImageFile);
+      })
+      .catch(function () {
+        _shareImageLoading = false;
+        cb(null);
+      });
+  }
+
+  function sendWhatsAppWithImage(g, onDone) {
+    var msg = buildMessage(g);
+    loadShareImage(function (file) {
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+          text: msg,
+          files: [file]
+        }).then(function () {
+          if (onDone) onDone(true);
+        }).catch(function () {
+          // User cancelled or error — fallback to wa.me
+          window.open(buildWhatsAppLink(g), '_blank');
+          if (onDone) onDone(true);
+        });
+      } else {
+        window.open(buildWhatsAppLink(g), '_blank');
+        if (onDone) onDone(true);
+      }
+    });
   }
 
   function buildInvitationUrl(g) {
@@ -459,16 +524,16 @@
       }
 
       var g = pendingGuests[i];
-      var link = buildWhatsAppLink(g);
-      window.open(link, '_blank');
-      markAsSent(g.token);
+      sendWhatsAppWithImage(g, function () {
+        markAsSent(g.token);
 
-      i++;
-      var pct = Math.round((i / pendingGuests.length) * 100);
-      waBarFill.style.width = pct + '%';
-      waStatus.textContent = 'Enviando ' + i + ' de ' + pendingGuests.length + ': ' + g.nombre;
+        i++;
+        var pct = Math.round((i / pendingGuests.length) * 100);
+        waBarFill.style.width = pct + '%';
+        waStatus.textContent = 'Enviando ' + i + ' de ' + pendingGuests.length + ': ' + g.nombre;
 
-      setTimeout(sendNext, 3000);
+        setTimeout(sendNext, 3000);
+      });
     }
 
     sendNext();
@@ -505,8 +570,9 @@
       '<span class="detail-grid__label">Link invitación</span><span class="detail-grid__value">' + escapeHtml(url) + '</span>';
 
     document.getElementById('detail-wa').onclick = function () {
-      window.open(buildWhatsAppLink(g), '_blank');
-      markAsSent(g.token);
+      sendWhatsAppWithImage(g, function () {
+        markAsSent(g.token);
+      });
     };
 
     var detailLink = document.getElementById('detail-link');
@@ -766,10 +832,26 @@
   msgTemplate.addEventListener('input', updateMsgPreview);
 
   document.getElementById('msg-save').addEventListener('click', function () {
-    saveMsgTemplate(msgTemplate.value);
-    showToast('Mensaje guardado', 'success');
-    msgModal.style.display = 'none';
-    renderTable(); // re-render WA links with new message
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+    saveMsgTemplate(msgTemplate.value)
+      .then(function (data) {
+        if (data && data.error) {
+          showToast('Error al guardar: ' + data.error, 'error');
+        } else {
+          showToast('Mensaje guardado', 'success');
+          msgModal.style.display = 'none';
+          renderTable();
+        }
+        btn.disabled = false;
+        btn.textContent = 'Guardar';
+      })
+      .catch(function () {
+        showToast('Error de conexión al guardar', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Guardar';
+      });
   });
 
   document.getElementById('msg-reset').addEventListener('click', function () {
