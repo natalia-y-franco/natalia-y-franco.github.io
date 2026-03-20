@@ -759,7 +759,7 @@
     }
 
     btn.textContent = 'Modificar respuesta';
-    btn.className = 'btn btn--link';
+    btn.className = 'btn btn--primary';
   }
 
   function updateFormState() {
