@@ -64,7 +64,6 @@
   var filterStatus = document.getElementById('filter-status');
   var filterGroup = document.getElementById('filter-group');
   var filterAllergy = document.getElementById('filter-allergy');
-  var filterEnviada = document.getElementById('filter-enviada');
   var tbody = document.getElementById('guests-tbody');
   var tableEmpty = document.getElementById('table-empty');
   var table = document.getElementById('guests-table');
@@ -231,14 +230,12 @@
     document.getElementById('stat-personas').textContent = stats.totalPersonas;
     document.getElementById('stat-personas-confirmadas').textContent = stats.personasConfirmadas || 0;
     document.getElementById('stat-confirmados').textContent = stats.confirmados;
-    var elPendientes = document.getElementById('stat-pendientes');
-    if (elPendientes) elPendientes.textContent = stats.pendientes;
+    document.getElementById('stat-pendientes').textContent = stats.pendientes;
+    document.getElementById('stat-personas-pendientes').textContent =
+      stats.totalPersonas - (stats.personasConfirmadas || 0) - (stats.personasDeclinadas || 0);
     document.getElementById('stat-declinados').textContent = stats.declinados;
     document.getElementById('stat-personas-declinadas').textContent = stats.personasDeclinadas || 0;
     document.getElementById('stat-alergias').textContent = stats.conAlergias;
-    var enviadas = stats.enviadas || 0;
-    document.getElementById('stat-enviadas').textContent = enviadas;
-    document.getElementById('stat-por-enviar').textContent = stats.totalInvitados - enviadas;
   }
 
   // ============================
@@ -264,7 +261,6 @@
     var status = filterStatus.value;
     var group = filterGroup.value;
     var allergy = filterAllergy.value;
-    var enviada = filterEnviada.value;
 
     return guests.filter(function (g) {
       if (search && !(g.nombre + ' ' + g.acompanante).toLowerCase().includes(search)) return false;
@@ -274,8 +270,6 @@
       if (group !== 'all' && g.grupo !== group) return false;
       if (allergy === 'yes' && g.alergias !== 'TRUE') return false;
       if (allergy === 'no' && g.alergias === 'TRUE') return false;
-      if (enviada === 'sent' && g.enviada !== 'TRUE') return false;
-      if (enviada === 'not-sent' && g.enviada === 'TRUE') return false;
       return true;
     });
   }
@@ -284,7 +278,6 @@
   filterStatus.addEventListener('change', renderTable);
   filterGroup.addEventListener('change', renderTable);
   filterAllergy.addEventListener('change', renderTable);
-  filterEnviada.addEventListener('change', renderTable);
 
   // ============================
   // TABLE RENDERING
@@ -323,17 +316,11 @@
         allergyBadge = '<span class="badge badge--none">—</span>';
       }
 
-      var sentBadge = g.enviada === 'TRUE'
-        ? '<span class="badge badge--sent">Enviada</span>'
-        : '<span class="badge badge--not-sent">No enviada</span>';
-
-
       tr.innerHTML =
         '<td><strong>' + escapeHtml(g.nombre) + '</strong></td>' +
         '<td>' + escapeHtml(g.acompanante || '—') + '</td>' +
         '<td>' + escapeHtml(g.grupo || '—') + '</td>' +
         '<td>' + statusBadge + '</td>' +
-        '<td>' + sentBadge + '</td>' +
         '<td>' + allergyBadge + '</td>' +
         '<td><div class="row-actions">' +
           '<button class="row-btn row-btn--wa btn-wa-send" title="Enviar WhatsApp" data-token="' + escapeHtml(g.token) + '">WA</button>' +
@@ -358,9 +345,7 @@
         var token = this.getAttribute('data-token');
         var guest = guests.find(function (g) { return g.token === token; });
         if (guest) {
-          sendWhatsAppWithImage(guest, function () {
-            markAsSent(token);
-          });
+          sendWhatsAppWithImage(guest);
         }
       });
     });
@@ -369,25 +354,6 @@
   // ============================
   // MARK AS SENT
   // ============================
-  function markAsSent(token) {
-    adminAction('markSent', { token: token })
-      .then(function (data) {
-        if (!data.error) {
-          // Update local data
-          var guest = guests.find(function (g) { return g.token === token; });
-          if (guest) guest.enviada = 'TRUE';
-          renderTable();
-          updateSentCount();
-        }
-      })
-      .catch(function () { /* silent fail */ });
-  }
-
-  function updateSentCount() {
-    var sent = guests.filter(function (g) { return g.enviada === 'TRUE'; }).length;
-    document.getElementById('stat-enviadas').textContent = sent;
-    document.getElementById('stat-por-enviar').textContent = guests.length - sent;
-  }
 
   // ============================
   // WHATSAPP LINKS
@@ -534,8 +500,6 @@
 
       var g = pendingGuests[i];
       sendWhatsAppWithImage(g, function () {
-        markAsSent(g.token);
-
         i++;
         var pct = Math.round((i / pendingGuests.length) * 100);
         waBarFill.style.width = pct + '%';
@@ -574,14 +538,11 @@
       '<span class="detail-grid__label">Acompañante</span><span class="detail-grid__value">' + escapeHtml(g.acompanante || 'Sin acompañante') + '</span>' +
       '<span class="detail-grid__label">Teléfono</span><span class="detail-grid__value">' + escapeHtml(g.telefono || '—') + '</span>' +
       '<span class="detail-grid__label">Estado</span><span class="detail-grid__value">' + statusText + '</span>' +
-      '<span class="detail-grid__label">Enviada por WA</span><span class="detail-grid__value">' + enviadaText + '</span>' +
       '<span class="detail-grid__label">Alergias</span><span class="detail-grid__value">' + escapeHtml(alergiasText) + '</span>' +
       '<span class="detail-grid__label">Link invitación</span><span class="detail-grid__value">' + escapeHtml(url) + '</span>';
 
     document.getElementById('detail-wa').onclick = function () {
-      sendWhatsAppWithImage(g, function () {
-        markAsSent(g.token);
-      });
+      sendWhatsAppWithImage(g);
     };
 
     var detailLink = document.getElementById('detail-link');
