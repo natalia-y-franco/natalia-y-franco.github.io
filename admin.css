@@ -656,6 +656,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
+  overflow-y: auto;
 }
 
 .modal-box {
@@ -664,6 +665,8 @@ body {
   padding: 32px;
   max-width: 500px;
   width: 100%;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
   box-shadow: var(--shadow-lg);
 }
 
