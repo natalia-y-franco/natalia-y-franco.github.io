@@ -871,6 +871,29 @@ body {
   flex: 1;
 }
 
+.wa-wizard__confirm-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brown);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.wa-wizard__confirm-row {
+  display: flex;
+  gap: 10px;
+}
+
+.wa-wizard__confirm-row .action-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.wa-wizard__confirm-btn {
+  font-size: 16px;
+  padding: 14px 20px;
+}
+
 /* Detail modal */
 .detail-grid {
   display: grid;
